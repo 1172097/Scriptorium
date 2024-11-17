@@ -2,20 +2,194 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Light Mode Colors */
+  --background-primary: #FEF7FF;
+  --text-primary: #6A5294;
+  --highlight: #EBDCFF;
+
+  /* Sign Up Colors */
+  --card-background: #FFFFFF;
+  --border-color: rgba(106, 82, 148, 0.2);
+  /* 20% opacity */
+  --label-color: rgba(106, 82, 148, 0.9);
+  /* 90% opacity */
+  --text-secondary: rgba(106, 82, 148, 0.7);
+  /* 70% opacity */
+  --button-hover: #563E80;
+  --input-background: #FEF7FF;
+  --input-focus: #EBDCFF;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(106, 82, 148, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(106, 82, 148, 0.1), 0 2px 4px -1px rgba(106, 82, 148, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(106, 82, 148, 0.1), 0 4px 6px -2px rgba(106, 82, 148, 0.05);
+
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Dark Mode Colors */
+[data-theme='dark'] {
+  --background-primary: #3F384C;
+  --text-primary: #D4BBFF;
+  --highlight: #513A7A;
+
+  --card-background: #2D2640;
+  --border-color: rgba(212, 187, 255, 0.2);
+  --label-color: rgba(212, 187, 255, 0.9);
+  --text-secondary: rgba(212, 187, 255, 0.7);
+  --button-hover: #654999;
+  --input-background: #3F384C;
+  --input-focus: #513A7A;
 }
 
+/* Global Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  height: 100%;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background-color: var(--background-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--text-primary);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+h2 {
+  font-size: 1.75rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+
+h4 {
+  font-size: 1.25rem;
+}
+
+h5 {
+  font-size: 1.125rem;
+}
+
+h6 {
+  font-size: 1rem;
+}
+
+/* Form Elements */
+input,
+textarea,
+select {
+  background-color: var(--input-background);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 0.75rem;
+  width: 100%;
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--text-primary);
+  background-color: var(--input-focus);
+}
+
+/* Buttons */
+button {
+  background-color: var(--text-primary);
+  color: var(--card-background);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  background-color: var(--button-hover);
+}
+
+/* Cards */
+.card {
+  background-color: var(--card-background);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  box-shadow: var(--shadow-md);
+}
+
+/* Links */
+a {
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--button-hover);
+}
+
+/* Utility Classes */
+.highlight {
+  background-color: var(--highlight);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.label {
+  color: var(--label-color);
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: var(--spacing-xs);
+}
+
+/* Animations */
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
