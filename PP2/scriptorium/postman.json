@@ -1,0 +1,1992 @@
+{
+	"info": {
+		"_postman_id": "8f468549-7b12-4fb1-ab99-a80597a5bbe4",
+		"name": "CSC309",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "39441144",
+		"_collection_link": "https://csc309-1056.postman.co/workspace/5285052c-a7e9-4b65-894d-336b4d954253/collection/35956509-8f468549-7b12-4fb1-ab99-a80597a5bbe4?action=share&source=collection_link&creator=39441144"
+	},
+	"item": [
+		{
+			"name": "admin",
+			"item": [
+				{
+					"name": "comments",
+					"item": [
+						{
+							"name": "[id].js",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/admin/comments/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"admin",
+										"comments",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "4"
+										}
+									]
+								},
+								"description": "This endpoint allows administrators to update a specific comment by its ID using an HTTP PATCH request.\n\n### Request Parameters\n\n- `id` (path parameter): The ID of the comment to be updated.\n    \n\n### Response\n\nThe response of this request is a JSON schema representing the updated comment data."
+							},
+							"response": []
+						},
+						{
+							"name": "index.js",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "http://localhost:3000/api/admin/comments",
+								"description": "# Get Admin Comments\n\nThis endpoint retrieves the comments made by admin.\n\n## Request\n\n- Method: GET\n    \n- URL: `http://localhost:3000/api/admin/comments`\n    \n\n## Response\n\nThe response for this request is a JSON object following the schema below:\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"comments\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"id\": {\n            \"type\": \"string\"\n          },\n          \"text\": {\n            \"type\": \"string\"\n          },\n          \"author\": {\n            \"type\": \"string\"\n          },\n          \"created_at\": {\n            \"type\": \"string\",\n            \"format\": \"date-time\"\n          }\n        }\n      }\n    }\n  }\n}\n\n ```"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "posts",
+					"item": [
+						{
+							"name": "[id].js",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": []
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/admin/posts/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"admin",
+										"posts",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "2"
+										}
+									]
+								},
+								"description": "### Update Post by ID\n\nThis endpoint is used to update a specific post by its ID.\n\n#### Request\n\n- Method: `PATCH`\n    \n- URL: `http://localhost:3000/api/admin/posts/:id`\n    \n- Body (x-www-form-urlencoded):\n    \n    - No parameters provided\n        \n\n#### Response\n\nThe response for this request is a JSON object conforming to the following schema:\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    // Include properties and their types based on the actual response\n  }\n}\n\n ```"
+							},
+							"response": []
+						},
+						{
+							"name": "index.js",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "http://localhost:3000/api/admin/posts",
+								"description": "This endpoint retrieves a list of posts for the admin. The response of this request is documented as a JSON schema below:\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"posts\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"id\": {\n            \"type\": \"string\"\n          },\n          \"title\": {\n            \"type\": \"string\"\n          },\n          \"content\": {\n            \"type\": \"string\"\n          },\n          \"author\": {\n            \"type\": \"string\"\n          },\n          \"createdAt\": {\n            \"type\": \"string\",\n            \"format\": \"date-time\"\n          }\n        }\n      }\n    }\n  }\n}\n\n ```"
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": {
+					"token": "{{adminToken1}}"
+				}
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "register user1",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"exampleUser1\",\n  \"email\": \"example1@example.com\",\n  \"password\": \"examplePassword\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"phone\": \"1234567890\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/api/auth/register",
+						"description": "The `POST /api/auth/register` endpoint is used to register a new user with the provided information. The request should include the user's username, email, password, first name, last name, and phone number.\n\n### Request Body\n\n- `username` (string): The username of the user.\n    \n- `email` (string): The email address of the user.\n    \n- `password` (string): The password for the user account.\n    \n- `firstName` (string): The first name of the user.\n    \n- `lastName` (string): The last name of the user.\n    \n- `phone` (string): The phone number of the user.\n    \n\n### Response\n\nThe response of this request is a JSON object representing the user's registration status.\n\n#### JSON Schema\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"status\": {\n      \"type\": \"string\"\n    },\n    \"message\": {\n      \"type\": \"string\"\n    }\n  }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "register user2",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"exampleUser2\",\n  \"email\": \"example2@example.com\",\n  \"password\": \"examplePassword2\",\n  \"firstName\": \"Jane\",\n  \"lastName\": \"Doe\",\n  \"phone\": \"1243567890\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/api/auth/register",
+						"description": "### Register User\n\nThis endpoint is used to register a new user.\n\n#### Request Body\n\n- `username` (string, required): The username of the user.\n    \n- `email` (string, required): The email address of the user.\n    \n- `password` (string, required): The password for the user account.\n    \n- `firstName` (string, required): The first name of the user.\n    \n- `lastName` (string, required): The last name of the user.\n    \n- `phone` (string, required): The phone number of the user.\n    \n\n#### Response\n\nUpon successful registration, the server responds with a JSON object containing the following fields:\n\n- `user_id` (number): The unique identifier for the user.\n    \n- `username` (string): The username of the registered user.\n    \n- `email` (string): The email address of the registered user.\n    \n- `password` (string): The password of the registered user.\n    \n- `first_name` (string): The first name of the registered user.\n    \n- `last_name` (string): The last name of the registered user.\n    \n- `profile_picture` (string): The profile picture of the registered user.\n    \n- `phone` (string): The phone number of the registered user.\n    \n- `role` (string): The role of the registered user.\n    \n- `created_at` (string): The date and time when the user account was created.\n    \n- `updated_at` (string): The date and time when the user account was last updated.\n    \n- `dark_mode` (boolean): Indicates whether the user has enabled dark mode."
+					},
+					"response": []
+				},
+				{
+					"name": "login user1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the JSON response",
+									"const responseJson = pm.response.json();",
+									"",
+									"// Save the tokens to environment variables",
+									"pm.environment.set(\"authToken1\", responseJson.token); // Adjust path if needed",
+									"pm.environment.set(\"refreshToken1\", responseJson.refreshToken); // Adjust path if needed"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"exampleUser1\",\n  \"password\": \"examplePassword\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/api/auth/login",
+						"description": "### POST /api/auth/login\n\nThe `POST /api/auth/login` endpoint is used to authenticate a user by providing their username and password.\n\n#### Request Body\n\nThe request should be sent with a JSON payload in the raw request body type, containing the `username` and `password` fields. The expected format for the request body is as follows:\n\n``` json\n{\n  \"username\": \"exampleUser1\",\n  \"password\": \"examplePassword\"\n}\n\n ```\n\n#### Response\n\nThe response of this request can be documented as a JSON schema:\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"token\": {\n      \"type\": \"string\"\n    },\n    \"refreshToken\": {\n      \"type\": \"string\"\n    }\n  }\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "login user1",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"username\": \"exampleUser1\",\n  \"password\": \"examplePassword\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:3000/api/auth/login"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "ETag",
+									"value": "\"es3n2j8mlfbs\""
+								},
+								{
+									"key": "Content-Length",
+									"value": "424"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 03 Nov 2024 23:12:06 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiVVNFUiIsImV4cGlyZXNBdCI6MTczMDY3OTEyNjk3NywiaWF0IjoxNzMwNjc1NTI2LCJleHAiOjE3MzA2NzkxMjZ9.QSCrzZiWBmxhV0sPMHilXQ0jI4TcOz7hf9XXE1-SI-I\",\n    \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiVVNFUiIsImV4cGlyZXNBdCI6MTczMDg0ODMyNjk3OCwiaWF0IjoxNzMwNjc1NTI2LCJleHAiOjE3MzA4NDgzMjZ9.-UJiZ4iuVITX-SIK6C_j5Q0s4P-76_OsLHWb2YrX90c\"\n}"
+						}
+					]
+				},
+				{
+					"name": "login user2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the JSON response",
+									"const responseJson = pm.response.json();",
+									"",
+									"// Save the tokens to environment variables",
+									"pm.environment.set(\"authToken2\", responseJson.token); // Adjust path if needed",
+									"pm.environment.set(\"refreshToken2\", responseJson.refreshToken); // Adjust path if needed"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"exampleUser2\",\n  \"password\": \"examplePassword2\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/api/auth/login"
+					},
+					"response": []
+				},
+				{
+					"name": "edit user2 profile",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// // Get the current environment",
+									"// const environment = pm.environment;",
+									"",
+									"// // Get the current access token and refresh token from environment variables",
+									"// const currentAuthToken = environment.get('authToken2');",
+									"// const refreshToken = environment.get('refreshToken2');",
+									"",
+									"// // Prepare the request to refresh the token",
+									"// const refreshTokenRequest = {",
+									"//     url: 'http://localhost:3000/api/auth/refresh', // Adjust the endpoint path as needed",
+									"//     method: 'POST', // Explicitly set to POST",
+									"//     header: {",
+									"//         'Accept': 'application/json',",
+									"//         'Content-Type': 'application/json',",
+									"//         'authorization': `Bearer ${currentAuthToken}`",
+									"",
+									"//     },",
+									"//     body: {",
+									"//         mode: 'raw',",
+									"//         raw: JSON.stringify({",
+									"//             refresh_token: `Bearer ${refreshToken}`",
+									"//         })",
+									"//     }",
+									"// };",
+									"",
+									"// // Send the refresh token request",
+									"// pm.sendRequest(refreshTokenRequest, (error, response) => {",
+									"//     if (error) {",
+									"//         console.error('Error refreshing token:', error);",
+									"//         return;",
+									"//     }",
+									"",
+									"//     try {",
+									"//         const responseData = response.json();",
+									"//         // Check if the response is valid",
+									"//         if (response.code === 200 && responseData.accessToken) {",
+									"//             // Save the new access token to the environment",
+									"//             environment.set('authToken2', responseData.accessToken);",
+									"//             console.log(responseData.accessToken)",
+									"//             console.log('Successfully refreshed access token');",
+									"//         } else {",
+									"//             console.warn('Failed to refresh token:', responseData);",
+									"//         }",
+									"//     } catch (e) {",
+									"//         console.error('Error parsing response:', e);",
+									"//     }",
+									"// });"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{authToken2}}"
+							}
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"newEmail@example.com\",\n  \"firstName\": \"Andrew\",\n  \"darkMode\": true,\n  \"new_username\": \"tasdf\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/api/auth/profile",
+						"description": "### Update User Profile\n\nThis endpoint allows the user to update their profile information.\n\n#### Request Body\n\n- email (string, required): The new email address for the user.\n    \n- firstName (string, required): The updated first name of the user.\n    \n- darkMode (boolean, required): Indicates whether the user has enabled dark mode.\n    \n- new_username (string, required): The new username for the user.\n    \n\n#### Response\n\nThe response will be in JSON format with the following schema:\n\n``` json\n{\n    \"type\": \"object\",\n    \"properties\": {\n        \"message\": {\n            \"type\": \"string\"\n        },\n        \"user\": {\n            \"type\": \"object\",\n            \"properties\": {\n                \"user_id\": {\n                    \"type\": \"integer\"\n                },\n                \"username\": {\n                    \"type\": \"string\"\n                },\n                \"email\": {\n                    \"type\": \"string\"\n                },\n                \"password\": {\n                    \"type\": \"string\"\n                },\n                \"first_name\": {\n                    \"type\": \"string\"\n                },\n                \"last_name\": {\n                    \"type\": \"string\"\n                },\n                \"profile_picture\": {\n                    \"type\": \"string\"\n                },\n                \"phone\": {\n                    \"type\": \"string\"\n                },\n                \"role\": {\n                    \"type\": \"string\"\n                },\n                \"created_at\": {\n                    \"type\": \"string\"\n                },\n                \"updated_at\": {\n                    \"type\": \"string\"\n                },\n                \"dark_mode\": {\n                    \"type\": \"boolean\"\n                }\n            }\n        }\n    }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "edit user1 profile",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// // Get the current environment",
+									"// const environment = pm.environment;",
+									"",
+									"// // Get the current access token and refresh token from environment variables",
+									"// const currentAuthToken = environment.get('authToken1');",
+									"// const refreshToken = environment.get('refreshToken1');",
+									"",
+									"// // Prepare the request to refresh the token",
+									"// const refreshTokenRequest = {",
+									"//     url: 'http://localhost:3000/api/auth/refresh', // Adjust the endpoint path as needed",
+									"//     method: 'POST', // Explicitly set to POST",
+									"//     header: {",
+									"//         'Accept': 'application/json',",
+									"//         'Content-Type': 'application/json',",
+									"//         'authorization': `Bearer ${currentAuthToken}`",
+									"",
+									"//     },",
+									"//     body: {",
+									"//         mode: 'raw',",
+									"//         raw: JSON.stringify({",
+									"//             refresh_token: `Bearer ${refreshToken}`",
+									"//         })",
+									"//     }",
+									"// };",
+									"",
+									"// // Send the refresh token request",
+									"// pm.sendRequest(refreshTokenRequest, (error, response) => {",
+									"//     if (error) {",
+									"//         console.error('Error refreshing token:', error);",
+									"//         return;",
+									"//     }",
+									"",
+									"//     try {",
+									"//         const responseData = response.json();",
+									"//         // Check if the response is valid",
+									"//         if (response.code === 200 && responseData.accessToken) {",
+									"//             // Save the new access token to the environment",
+									"//             environment.set('authToken1', responseData.accessToken);",
+									"//             console.log(responseData.accessToken)",
+									"//             console.log('Successfully refreshed access token');",
+									"//         } else {",
+									"//             console.warn('Failed to refresh token:', responseData);",
+									"//         }",
+									"//     } catch (e) {",
+									"//         console.error('Error parsing response:', e);",
+									"//     }",
+									"// });"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{authToken1}}"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"newEmail2@example.com\",\n  \"firstName\": \"Andy\",\n  \"lastName\": \"Ren\",\n  \"darkMode\": true,\n  \"new_username\": \"GOAT\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/api/auth/profile"
+					},
+					"response": []
+				},
+				{
+					"name": "refresh user1 token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();",
+									"",
+									"pm.environment.set(\"authToken1\", responseJson.accessToken); "
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{authToken1}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refresh_token\": \"Bearer {{refreshToken1}}\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/api/auth/refresh",
+						"description": "### Update User Profile\n\nThis endpoint allows the user to update their profile information.\n\n**HTTP Request**\n\n``` http\nPOST http://localhost:3000/api/auth/refresh\n\n ```\n\n**Request Body**\n\n- email (string, required): The new email address for the user.\n    \n- firstName (string, required): The updated first name of the user.\n    \n- darkMode (boolean, required): Indicates whether the user has enabled dark mode.\n    \n- new_username (string, required): The new username for the user.\n    \n\n**Example**\n\n``` json\n{\n    \"email\": \"newemail@example.com\",\n    \"firstName\": \"NewFirstName\",\n    \"darkMode\": true,\n    \"new_username\": \"newusername\"\n}\n\n ```\n\n**Response**\n\n- Status: 200\n    \n- { \"accessToken\": \"\"}\n    \n\nThis endpoint is used to refresh the access token by providing the refresh token.\n\n#### Request Body\n\n- `refresh_token` (string): The refresh token used to obtain a new access token.\n    \n\n#### Response\n\nThe response is a JSON object with the following schema:\n\n``` json\n{\n    \"accessToken\": \"\"\n}\n\n ```\n\n- `accessToken` (string): The new access token."
+					},
+					"response": []
+				},
+				{
+					"name": "refresh user2 token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();",
+									"",
+									"pm.environment.set(\"authToken1\", responseJson.accessToken); "
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{authToken2}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refresh_token\": \"Bearer {{refreshToken2}}\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/api/auth/refresh"
+					},
+					"response": []
+				},
+				{
+					"name": "login admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the JSON response",
+									"const responseJson = pm.response.json();",
+									"",
+									"// Save the tokens to environment variables",
+									"pm.environment.set(\"adminToken1\", responseJson.token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"admin\",\n  \"password\": \"password123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/api/auth/login"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "code",
+			"item": [
+				{
+					"name": "execute",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"code\": \"name = input('Enter your name: ')\\nprint('Hello, ' + name)\\nvar = input('give a num: ')\\nprint(var)\",\n  \"language\": \"python\",\n  \"input\": \"John \\n 1\"\n}\n\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/api/code/execute"
+					},
+					"response": []
+				},
+				{
+					"name": "exec with params",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"code\": \"def add_numbers(a, b):\\n    return a + b\\nif __name__ == \\\"__main__\\\":\\n    try:\\n        numbers = input().strip().split()\\n        if len(numbers) != 2:\\n            print(\\\"Please provide exactly two numbers\\\")\\n            exit(1)\\n            \\n        a = int(numbers[0])\\n        b = int(numbers[1])\\n        print(add_numbers(a, b))\\n    except ValueError:\\n        print(\\\"Error: Please provide valid integer numbers\\\")\\n        exit(1)\",\n  \"language\": \"python\",\n  \"input\": \"2 1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/api/code/execute"
+					},
+					"response": []
+				},
+				{
+					"name": "execute with language c",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"code\": \"#include <stdio.h>\\n\\nint add_numbers(int a, int b, int c) {\\n    return a * b * c;\\n}\\n\\nint main() {\\n    int a, b, c;\\n    printf(\\\"Enter three numbers: \\\");\\n    scanf(\\\"%d %d %d\\\", &a, &b, &c);\\n    printf(\\\"Sum: %d\\\\n\\\", add_numbers(a, b, c));\\n    return 0;\\n}\",\n  \"language\": \"c\",\n  \"input\": \"20 30 40\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/api/code/execute",
+						"description": "### Execute Code\n\nThis endpoint allows you to execute code in the specified programming language.\n\n#### Request Body\n\n- `code` (text): The code to be executed.\n    \n- `language` (text): The programming language of the code.\n    \n- `input` (text): The input for the code.\n    \n\n#### Response\n\nThe response of this request follows the JSON schema below:\n\n``` latex\n{\n  \"result\": \"string\",\n  \"errors\": \"string\"\n}\n\n ```\n\n- `result` (string): The result of the code execution.\n    \n- `errors` (string): Any errors encountered during code execution."
+					},
+					"response": []
+				},
+				{
+					"name": "execute with Java",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"code\": \"public class AddNumbers {\\n    public static int addNumbers(int a, int b) {\\n        return a + b;\\n    }\\n\\n    public static void main(String[] args) {\\n        if (args.length != 2) {\\n            System.out.println(\\\"Please provide exactly two numbers\\\");\\n            return;\\n        }\\n\\n        try {\\n            int a = Integer.parseInt(args[0]);\\n            int b = Integer.parseInt(args[1]);\\n            System.out.println(\\\"Sum: \\\" + addNumbers(a, b));\\n        } catch (NumberFormatException e) {\\n            System.out.println(\\\"Error: Please provide valid integer numbers\\\");\\n        }\\n    }\\n}\",\n  \"language\": \"java\",\n  \"input\": \"2 5\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/api/code/execute"
+					},
+					"response": []
+				},
+				{
+					"name": "execute with js",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"code\": \"function addNumbers(a, b) {\\n  return a + b;\\n}\\n\\nconst args = process.argv.slice(2);\\nif (args.length !== 2) {\\n  console.log(\\\"Please provide exactly two numbers\\\");\\n  process.exit(1);\\n}\\n\\nconst a = parseInt(args[0]);\\nconst b = parseInt(args[1]);\\n\\nif (isNaN(a) || isNaN(b)) {\\n  console.log(\\\"Error: Please provide valid integer numbers\\\");\\n  process.exit(1);\\n}\\n\\nconsole.log(\\\"Sum:\\\", addNumbers(a, b));\",\n  \"language\": \"javascript\",\n  \"input\": \"10 8\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/api/code/execute"
+					},
+					"response": []
+				},
+				{
+					"name": "execute with c++",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"code\": \"#include <iostream>\\n#include <cstdlib>\\n\\nint addNumbers(int a, int b) {\\n    return a + b;\\n}\\n\\nint main(int argc, char* argv[]) {\\n    if (argc != 3) {\\n        std::cout << \\\"Please provide exactly two numbers\\\" << std::endl;\\n        return 1;\\n    }\\n\\n    int a = std::atoi(argv[1]);\\n    int b = std::atoi(argv[2]);\\n\\n    if (a == 0 && argv[1][0] != '0' || b == 0 && argv[2][0] != '0') {\\n        std::cout << \\\"Error: Please provide valid integer numbers\\\" << std::endl;\\n        return 1;\\n    }\\n\\n    std::cout << \\\"Sum: \\\" << addNumbers(a, b) << std::endl;\\n    return 0;\\n}\",\n  \"language\": \"cpp\",\n  \"input\": \"200 500\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/api/code/execute"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "posts",
+			"item": [
+				{
+					"name": "[postId]",
+					"item": [
+						{
+							"name": "comments",
+							"item": [
+								{
+									"name": "[commentId].js",
+									"item": [
+										{
+											"name": "[commentId].js",
+											"request": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "http://localhost:3000/api/posts/:postId/comments/:id",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "3000",
+													"path": [
+														"api",
+														"posts",
+														":postId",
+														"comments",
+														":id"
+													],
+													"variable": [
+														{
+															"key": "postId",
+															"value": "1"
+														},
+														{
+															"key": "id",
+															"value": "1"
+														}
+													]
+												},
+												"description": "# Get Post Comment\n\nThis endpoint retrieves a specific comment for a post.\n\n## Request\n\n- Method: GET\n    \n- Path Parameters:\n    \n    - `postId` (string, required): The ID of the post.\n        \n    - `id` (string, required): The ID of the comment.\n        \n\n## Response\n\n- `comment` (object): The retrieved comment.\n    \n    - `id` (string): The ID of the comment.\n        \n    - `text` (string): The content of the comment.\n        \n    - `author` (string): The author of the comment.\n        \n    - `createdAt` (string): The date and time when the comment was created."
+											},
+											"response": []
+										},
+										{
+											"name": "[commentId].js",
+											"request": {
+												"method": "PUT",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    \"content\": \"hi\"\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:3000/api/posts/:postId/comments/:id",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "3000",
+													"path": [
+														"api",
+														"posts",
+														":postId",
+														"comments",
+														":id"
+													],
+													"variable": [
+														{
+															"key": "postId",
+															"value": "1"
+														},
+														{
+															"key": "id",
+															"value": "12"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "[commentId].js",
+											"request": {
+												"method": "DELETE",
+												"header": [],
+												"url": {
+													"raw": "http://localhost:3000/api/posts/:postId/comments/:id",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "3000",
+													"path": [
+														"api",
+														"posts",
+														":postId",
+														"comments",
+														":id"
+													],
+													"variable": [
+														{
+															"key": "postId",
+															"value": "2"
+														},
+														{
+															"key": "id",
+															"value": "6"
+														}
+													]
+												}
+											},
+											"response": []
+										}
+									],
+									"auth": {
+										"type": "bearer",
+										"bearer": {
+											"token": "{{authToken1}}"
+										}
+									},
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"type": "text/javascript",
+												"packages": {},
+												"exec": [
+													""
+												]
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"packages": {},
+												"exec": [
+													""
+												]
+											}
+										}
+									]
+								},
+								{
+									"name": "rate.js",
+									"item": [
+										{
+											"name": "rate.js",
+											"request": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    \"ratingValue\": 1,\n    \"commentId\": 1 //optional\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:3000/api/posts/:id/comments/rate",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "3000",
+													"path": [
+														"api",
+														"posts",
+														":id",
+														"comments",
+														"rate"
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "1"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "rate.js",
+											"request": {
+												"method": "DELETE",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    \"commentId\": 1 // optional\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:3000/api/posts/:id/comments/rate",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "3000",
+													"path": [
+														"api",
+														"posts",
+														":id",
+														"comments",
+														"rate"
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "1"
+														}
+													]
+												}
+											},
+											"response": []
+										}
+									],
+									"auth": {
+										"type": "bearer",
+										"bearer": {
+											"token": "{{authToken1}}"
+										}
+									},
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"type": "text/javascript",
+												"packages": {},
+												"exec": [
+													""
+												]
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"packages": {},
+												"exec": [
+													""
+												]
+											}
+										}
+									]
+								},
+								{
+									"name": "create.js",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": {
+												"token": "{{authToken1}}"
+											}
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"content\": \"ur post bad L aura\",\n    \"parentId\": null\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:3000/api/posts/:id/comments/create",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"api",
+												"posts",
+												":id",
+												"comments",
+												"create"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "index.js",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:3000/api/posts/:id/comments",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"api",
+												"posts",
+												":id",
+												"comments"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "report.js",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": {
+												"token": "{{authToken1}}"
+											}
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"reason\": \"i dont like\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:3000/api/posts/:id/comments/report",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"api",
+												"posts",
+												":id",
+												"comments",
+												"report"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "[postId].js",
+					"item": [
+						{
+							"name": "[postId].js",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/posts/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"posts",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[postId].js",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"changedtitle\",\n    \"content\": \"changedcontent\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/posts/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"posts",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "4"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[postId].js",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/posts/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"posts",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "4"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": {
+							"token": "{{authToken1}}"
+						}
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "create.js",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{authToken1}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Introduction to JavaScript\",\n    \"content\": \"JavaScript is a versatile programming language used in web development, hihellolmao.\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/api/posts/create",
+						"description": "### Create a New Post\n\nThis endpoint allows you to create a new post by submitting the title and content of the post.\n\n#### Request Body\n\n- title (string, required): The title of the post.\n    \n- content (string, required): The content of the post.\n    \n\n#### Response\n\nThe response of this request is a JSON object with the following schema:\n\n``` json\n{\n  \"postId\": \"string\",\n  \"message\": \"string\"\n}\n\n ```\n\n- postId (string): The unique identifier of the newly created post.\n    \n- message (string): A message indicating the status of the post creation process."
+					},
+					"response": []
+				},
+				{
+					"name": "index.js",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/posts/?sortBy=&query=to",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"posts",
+								""
+							],
+							"query": [
+								{
+									"key": "sortBy",
+									"value": ""
+								},
+								{
+									"key": "query",
+									"value": "to"
+								}
+							]
+						},
+						"description": "### API Request Description\n\nThis endpoint is used to retrieve posts based on the provided query parameters. The request is sent via an HTTP GET method to the specified URL. The query parameters include sortBy and query, which can be used to sort and filter the posts.\n\n### Request Body\n\nThis request does not require a request body.\n\n### Response Body\n\nThe response is in JSON format and includes an array of \"posts\" containing post details such as id, title, content, created_at, updated_at, rating, numReports, isHidden, authorId, tags, templates, and author information. Additionally, the response includes \"pagination\" details with totalPosts, currentPage, pageSize, and totalPages.\n\n### JSON Schema\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"posts\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"id\": { \"type\": \"integer\" },\n          \"title\": { \"type\": \"string\" },\n          \"content\": { \"type\": \"string\" },\n          \"created_at\": { \"type\": \"string\" },\n          \"updated_at\": { \"type\": \"string\" },\n          \"rating\": { \"type\": \"integer\" },\n          \"numReports\": { \"type\": \"integer\" },\n          \"isHidden\": { \"type\": \"boolean\" },\n          \"authorId\": { \"type\": \"integer\" },\n          \"tags\": { \"type\": \"array\" },\n          \"templates\": { \"type\": \"array\" },\n          \"author\": {\n            \"type\": \"object\",\n            \"properties\": {\n              \"user_id\": { \"type\": \"integer\" },\n              \"username\": { \"type\": \"string\" },\n              \"email\": { \"type\": \"string\" },\n              \"password\": { \"type\": \"string\" },\n              \"first_name\": { \"type\": \"string\" },\n              \"last_name\": { \"type\": \"string\" },\n              \"profile_picture\": { \"type\": \"string\" },\n              \"phone\": { \"type\": \"string\" },\n              \"role\": { \"type\": \"string\" },\n              \"created_at\": { \"type\": \"string\" },\n              \"updated_at\": { \"type\": \"string\" },\n              \"dark_mode\": { \"type\": \"boolean\" }\n            }\n          }\n        }\n      }\n    },\n    \"pagination\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"totalPosts\": { \"type\": \"integer\" },\n        \"currentPage\": { \"type\": \"integer\" },\n        \"pageSize\": { \"type\": \"integer\" },\n        \"totalPages\": { \"type\": \"integer\" }\n      }\n    }\n  }\n}\n\n ```"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "tags",
+			"item": [
+				{
+					"name": "create.js",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{authToken1}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"hello\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/api/tags/create"
+					},
+					"response": []
+				},
+				{
+					"name": "index.js",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/tags?search=ext",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tags"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "ext"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "templates",
+			"item": [
+				{
+					"name": "execute",
+					"item": [
+						{
+							"name": "execute user1 template",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"templateId\": {{user1TemplateId}}, // Replace with the actual template ID\n  \"input\": \"400 500\" // Provide the input parameters separated by space\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:3000/api/templates/execute",
+								"description": "### Execute Template\n\nThis endpoint allows you to execute a specific template by providing the template ID and input parameters.\n\n#### Request Body\n\n- `templateId` (integer): Replace with the actual template ID.\n    \n- `input` (string): Provide the input parameters separated by space.\n    \n\n**Example:**\n\n``` json\n{\n  \"templateId\": 7,\n  \"input\": \"400 500\"\n}\n\n ```\n\n#### Response\n\n- Status: 200\n    \n- Content-Type: application/json\n    \n\n**Example Response Body:**\n\n``` json\n{\n  \"output\": \"\",\n  \"template\": {\n    \"id\": 0,\n    \"title\": \"\",\n    \"language\": \"\"\n  }\n}\n\n ```\n\n### Request Body\n\n- `templateId` (number): Replace with the actual template ID to be executed.\n    \n- `input` (string): Provide the input parameters separated by space.\n    \n\nUpon successful execution, the API returns a 200 status with a JSON response in the content type. The response includes an \"output\" field representing the result of the template execution, and a \"template\" object containing details such as the ID, title, and language of the executed template.\n\n### Response\n\n- `output` (string): Result of the template execution.\n    \n- `template` (object): Details of the executed template including ID, title, and language."
+							},
+							"response": []
+						},
+						{
+							"name": "execute user2 template",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"templateId\": {{user2TemplateId}}, // Replace with the actual template ID\n  \"input\": \"300 700\" // Provide the input parameters separated by space\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:3000/api/templates/execute"
+							},
+							"response": []
+						},
+						{
+							"name": "execute user2's fork",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"templateId\": {{forkedTemplateId}}, // Replace with the actual template ID\n  \"input\": \"\" // Provide the input parameters separated by space\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:3000/api/templates/execute"
+							},
+							"response": []
+						},
+						{
+							"name": "execute template",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"templateId\": 6, // Replace with the actual template ID\n  \"input\": \"3 5\" // Provide the input parameters separated by space\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:3000/api/templates/execute"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "index",
+					"item": [
+						{
+							"name": "search Templates",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/templates?page=1&query=public&limit=10",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"templates"
+									],
+									"query": [
+										{
+											"key": "tag",
+											"value": "javascript",
+											"disabled": true
+										},
+										{
+											"key": "language",
+											"value": "javascript",
+											"disabled": true
+										},
+										{
+											"key": "sortBy",
+											"value": "createdAt",
+											"disabled": true
+										},
+										{
+											"key": "sortOrder",
+											"value": "desc",
+											"disabled": true
+										},
+										{
+											"key": "pageSize",
+											"value": "10",
+											"disabled": true
+										},
+										{
+											"key": "tags",
+											"value": "javascript,frontend",
+											"disabled": true
+										},
+										{
+											"key": "sortBy",
+											"value": "title",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "desc",
+											"disabled": true
+										},
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "query",
+											"value": "public"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										}
+									]
+								},
+								"description": "### GET /api/templates\n\nThis endpoint retrieves a list of templates.\n\n#### Request\n\nNo request body is required for this endpoint.\n\n#### Response\n\nThe response is a JSON object with the following schema:\n\n``` json\n{\n  \"templates\": [\n    {\n      \"id\": \"number\",\n      \"title\": \"string\",\n      \"description\": \"string\",\n      \"content\": \"string\",\n      \"language\": \"string\",\n      \"isForked\": \"boolean\",\n      \"createdAt\": \"string\",\n      \"updatedAt\": \"string\",\n      \"authorId\": \"number\",\n      \"originTemplateId\": \"number\",\n      \"author\": {\n        \"username\": \"string\",\n        \"profile_picture\": \"string\"\n      },\n      \"tags\": [\n        {\n          \"name\": \"string\"\n        }\n      ]\n    }\n  ],\n  \"pagination\": {\n    \"currentPage\": \"number\",\n    \"totalPages\": \"number\",\n    \"totalItems\": \"number\",\n    \"itemsPerPage\": \"number\",\n    \"hasMore\": \"boolean\",\n    \"hasLess\": \"boolean\"\n  }\n}\n\n ```"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "create",
+					"item": [
+						{
+							"name": "user1 template",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the JSON response",
+											"const responseJson = pm.response.json();",
+											"",
+											"// Save the tokens to environment variables",
+											"pm.environment.set(\"user1TemplateId\", responseJson.id); // Adjust path if needed"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// // Get the current environment",
+											"// const environment = pm.environment;",
+											"",
+											"// // Get the current access token and refresh token from environment variables",
+											"// const currentAuthToken = environment.get('authToken1');",
+											"// const refreshToken = environment.get('refreshToken1');",
+											"",
+											"// // Prepare the request to refresh the token",
+											"// const refreshTokenRequest = {",
+											"//     url: 'http://localhost:3000/api/auth/refresh', // Adjust the endpoint path as needed",
+											"//     method: 'POST', // Explicitly set to POST",
+											"//     header: {",
+											"//         'Accept': 'application/json',",
+											"//         'Content-Type': 'application/json',",
+											"//         'authorization': `Bearer ${currentAuthToken}`",
+											"",
+											"//     },",
+											"//     body: {",
+											"//         mode: 'raw',",
+											"//         raw: JSON.stringify({",
+											"//             refresh_token: `Bearer ${refreshToken}`",
+											"//         })",
+											"//     }",
+											"// };",
+											"",
+											"// // Send the refresh token request",
+											"// pm.sendRequest(refreshTokenRequest, (error, response) => {",
+											"//     if (error) {",
+											"//         console.error('Error refreshing token:', error);",
+											"//         return;",
+											"//     }",
+											"",
+											"//     try {",
+											"//         const responseData = response.json();",
+											"//         // Check if the response is valid",
+											"//         if (response.code === 200 && responseData.accessToken) {",
+											"//             // Save the new access token to the environment",
+											"//             environment.set('authToken1', responseData.accessToken);",
+											"//             console.log(responseData.accessToken)",
+											"//             console.log('Successfully refreshed access token');",
+											"//         } else {",
+											"//             console.warn('Failed to refresh token:', responseData);",
+											"//         }",
+											"//     } catch (e) {",
+											"//         console.error('Error parsing response:', e);",
+											"//     }",
+											"// });"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{authToken1}}"
+									}
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "authorization",
+										"value": "Bearer {{authToken1}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"title\": \"Add Numbers\",\n  \"description\": \"A simple Python script to add two numbers\",\n  \"content\": \"def add_numbers(a, b):\\n    return a + b\\nif __name__ == \\\"__main__\\\":\\n    try:\\n        numbers = input().strip().split()\\n        if len(numbers) != 2:\\n            print(\\\"Please provide exactly two numbers\\\")\\n            exit(1)\\n            \\n        a = int(numbers[0])\\n        b = int(numbers[1])\\n        print(add_numbers(a, b))\\n    except ValueError:\\n        print(\\\"Error: Please provide valid integer numbers\\\")\\n        exit(1)\",\n  \"language\": \"python\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:3000/api/templates/create",
+								"description": "### Create Template\n\nThis endpoint allows the user to create a new template for a script.\n\n#### Request Body\n\n- title (string, required): The title of the template.\n    \n- description (string, required): A brief description of the template.\n    \n- content (string, required): The content of the script template.\n    \n- language (string, required): The programming language of the script template.\n    \n- authorId (integer, required): The ID of the author creating the template.\n    \n\nExample:\n\n``` json\n{\n  \"title\": \"Add Numbers\",\n  \"description\": \"A simple Python script to add two numbers\",\n  \"content\": \"def add_numbers(a, b):\\n    return a + b\\nif __name__ == \\\"__main__\\\":\\n    try:\\n        numbers = input().strip().split()\\n        if len(numbers) != 2:\\n            print(\\\"Please provide exactly two numbers\\\")\\n            exit(1)\\n            \\n        a = int(numbers[0])\\n        b = int(numbers[1])\\n        print(add_numbers(a, b))\\n    except ValueError:\\n        print(\\\"Error: Please provide valid integer numbers\\\")\\n        exit(1)\",\n  \"language\": \"python\",\n  \"authorId\": 1\n}\n#### Response (JSON Schema)\n```json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"templateId\": {\n      \"type\": \"integer\"\n    },\n    \"title\": {\n      \"type\": \"string\"\n    },\n    \"description\": {\n      \"type\": \"string\"\n    },\n    \"language\": {\n      \"type\": \"string\"\n    },\n    \"authorId\": {\n      \"type\": \"integer\"\n    },\n    \"createdAt\": {\n      \"type\": \"string\",\n      \"format\": \"date-time\"\n    },\n    \"updatedAt\": {\n      \"type\": \"string\",\n      \"format\": \"date-time\"\n    }\n  }\n}\n\n ```"
+							},
+							"response": []
+						},
+						{
+							"name": "user2 template",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the JSON response",
+											"const responseJson = pm.response.json();",
+											"",
+											"// Save the tokens to environment variables",
+											"pm.environment.set(\"user2TemplateId\", responseJson.id); // Adjust path if needed"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// // Get the current environment",
+											"// const environment = pm.environment;",
+											"",
+											"// // Get the current access token and refresh token from environment variables",
+											"// const currentAuthToken = environment.get('authToken2');",
+											"// const refreshToken = environment.get('refreshToken2');",
+											"",
+											"// // Prepare the request to refresh the token",
+											"// const refreshTokenRequest = {",
+											"//     url: 'http://localhost:3000/api/auth/refresh', // Adjust the endpoint path as needed",
+											"//     method: 'POST', // Explicitly set to POST",
+											"//     header: {",
+											"//         'Accept': 'application/json',",
+											"//         'Content-Type': 'application/json',",
+											"//         'authorization': `Bearer ${currentAuthToken}`",
+											"",
+											"//     },",
+											"//     body: {",
+											"//         mode: 'raw',",
+											"//         raw: JSON.stringify({",
+											"//             refresh_token: `Bearer ${refreshToken}`",
+											"//         })",
+											"//     }",
+											"// };",
+											"",
+											"// // Send the refresh token request",
+											"// pm.sendRequest(refreshTokenRequest, (error, response) => {",
+											"//     if (error) {",
+											"//         console.error('Error refreshing token:', error);",
+											"//         return;",
+											"//     }",
+											"",
+											"//     try {",
+											"//         const responseData = response.json();",
+											"//         // Check if the response is valid",
+											"//         if (response.code === 200 && responseData.accessToken) {",
+											"//             // Save the new access token to the environment",
+											"//             environment.set('authToken2', responseData.accessToken);",
+											"//             console.log(responseData.accessToken)",
+											"//             console.log('Successfully refreshed access token');",
+											"//         } else {",
+											"//             console.warn('Failed to refresh token:', responseData);",
+											"//         }",
+											"//     } catch (e) {",
+											"//         console.error('Error parsing response:', e);",
+											"//     }",
+											"// });"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{authToken2}}"
+									}
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "authorization",
+										"value": "Bearer {{authToken2}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"title\": \"Add Numbers in c\",\n  \"description\": \"A simple Python script to add two numbers\",\n  \"content\": \"#include <stdio.h>\\n\\nint add_numbers(int a, int b) {\\n    return a + b;\\n}\\n\\nint main() {\\n    int a, b;\\n    printf(\\\"Enter two numbers: \\\");\\n    scanf(\\\"%d %d\\\", &a, &b);\\n    printf(\\\"Sum: %d\\\\n\\\", add_numbers(a, b));\\n    return 0;\\n}\",\n  \"language\": \"c\",\n  \"authorId\": 2 // Replace with a valid authorId\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:3000/api/templates/create"
+							},
+							"response": []
+						},
+						{
+							"name": "user2 fork from user1",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the JSON response",
+											"const responseJson = pm.response.json();",
+											"",
+											"// Save the tokens to environment variables",
+											"pm.environment.set(\"forkedTemplateId\", responseJson.id); // Adjust path if needed"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// // Get the current environment",
+											"// const environment = pm.environment;",
+											"",
+											"// // Get the current access token and refresh token from environment variables",
+											"// const currentAuthToken = environment.get('authToken2');",
+											"// const refreshToken = environment.get('refreshToken2');",
+											"",
+											"// // Prepare the request to refresh the token",
+											"// const refreshTokenRequest = {",
+											"//     url: 'http://localhost:3000/api/auth/refresh', // Adjust the endpoint path as needed",
+											"//     method: 'POST', // Explicitly set to POST",
+											"//     header: {",
+											"//         'Accept': 'application/json',",
+											"//         'Content-Type': 'application/json',",
+											"//         'authorization': `Bearer ${currentAuthToken}`",
+											"",
+											"//     },",
+											"//     body: {",
+											"//         mode: 'raw',",
+											"//         raw: JSON.stringify({",
+											"//             refresh_token: `Bearer ${refreshToken}`",
+											"//         })",
+											"//     }",
+											"// };",
+											"",
+											"// // Send the refresh token request",
+											"// pm.sendRequest(refreshTokenRequest, (error, response) => {",
+											"//     if (error) {",
+											"//         console.error('Error refreshing token:', error);",
+											"//         return;",
+											"//     }",
+											"",
+											"//     try {",
+											"//         const responseData = response.json();",
+											"//         // Check if the response is valid",
+											"//         if (response.code === 200 && responseData.accessToken) {",
+											"//             // Save the new access token to the environment",
+											"//             environment.set('authToken2', responseData.accessToken);",
+											"//             console.log(responseData.accessToken)",
+											"//             console.log('Successfully refreshed access token');",
+											"//         } else {",
+											"//             console.warn('Failed to refresh token:', responseData);",
+											"//         }",
+											"//     } catch (e) {",
+											"//         console.error('Error parsing response:', e);",
+											"//     }",
+											"// });"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{authToken2}}"
+									}
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{authToken2}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"isForked\": true,\n  \"content\": \"print('content chaged!')\",\n  \"originTemplateId\": {{user1TemplateId}}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:3000/api/templates/create",
+								"description": "# Create Template\n\nThis endpoint allows the creation of a new template.\n\n## Request Body\n\n- `isForked` (boolean): Indicates whether the template is a fork.\n    \n- `authorId` (number): The ID of the author of the template.\n    \n- `originTemplateId` (number): The ID of the original template being forked.\n    \n\n## Response\n\nThe response for this request follows the JSON schema below:\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"templateId\": {\n      \"type\": \"number\"\n    },\n    \"message\": {\n      \"type\": \"string\"\n    }\n  }\n}\n\n ```"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "delete template",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// // Get the current environment",
+									"// const environment = pm.environment;",
+									"",
+									"// // Get the current access token and refresh token from environment variables",
+									"// const currentAuthToken = environment.get('authToken1');",
+									"// const refreshToken = environment.get('refreshToken1');",
+									"",
+									"// // Prepare the request to refresh the token",
+									"// const refreshTokenRequest = {",
+									"//     url: 'http://localhost:3000/api/auth/refresh', // Adjust the endpoint path as needed",
+									"//     method: 'POST', // Explicitly set to POST",
+									"//     header: {",
+									"//         'Accept': 'application/json',",
+									"//         'Content-Type': 'application/json',",
+									"//         'authorization': `Bearer ${currentAuthToken}`",
+									"",
+									"//     },",
+									"//     body: {",
+									"//         mode: 'raw',",
+									"//         raw: JSON.stringify({",
+									"//             refresh_token: `Bearer ${refreshToken}`",
+									"//         })",
+									"//     }",
+									"// };",
+									"",
+									"// // Send the refresh token request",
+									"// pm.sendRequest(refreshTokenRequest, (error, response) => {",
+									"//     if (error) {",
+									"//         console.error('Error refreshing token:', error);",
+									"//         return;",
+									"//     }",
+									"",
+									"//     try {",
+									"//         const responseData = response.json();",
+									"//         // Check if the response is valid",
+									"//         if (response.code === 200 && responseData.accessToken) {",
+									"//             // Save the new access token to the environment",
+									"//             environment.set('authToken1', responseData.accessToken);",
+									"//             console.log(responseData.accessToken)",
+									"//             console.log('Successfully refreshed access token');",
+									"//         } else {",
+									"//             console.warn('Failed to refresh token:', responseData);",
+									"//         }",
+									"//     } catch (e) {",
+									"//         console.error('Error parsing response:', e);",
+									"//     }",
+									"// });"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{authToken1}}"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/api/templates/{{forkedTemplateId}}",
+						"description": "### Delete Template\n\nThis endpoint is used to delete a specific template by providing the template ID in the URL.\n\n#### Request Body\n\nThis endpoint does not require a request body.\n\n#### Response\n\nThe response will not contain a body. The status code will indicate the success or failure of the deletion operation."
+					},
+					"response": []
+				},
+				{
+					"name": "edit template",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Get the current environment",
+									"const environment = pm.environment;",
+									"",
+									"// Get the current access token and refresh token from environment variables",
+									"const currentAuthToken = environment.get('authToken2');",
+									"const refreshToken = environment.get('refreshToken2');",
+									"",
+									"// Prepare the request to refresh the token",
+									"const refreshTokenRequest = {",
+									"    url: 'http://localhost:3000/api/auth/refresh', // Adjust the endpoint path as needed",
+									"    method: 'POST', // Explicitly set to POST",
+									"    header: {",
+									"        'Accept': 'application/json',",
+									"        'Content-Type': 'application/json',",
+									"        'authorization': `Bearer ${currentAuthToken}`",
+									"",
+									"    },",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({",
+									"            refresh_token: `Bearer ${refreshToken}`",
+									"        })",
+									"    }",
+									"};",
+									"",
+									"// Send the refresh token request",
+									"pm.sendRequest(refreshTokenRequest, (error, response) => {",
+									"    if (error) {",
+									"        console.error('Error refreshing token:', error);",
+									"        return;",
+									"    }",
+									"",
+									"    try {",
+									"        const responseData = response.json();",
+									"        // Check if the response is valid",
+									"        if (response.code === 200 && responseData.accessToken) {",
+									"            // Save the new access token to the environment",
+									"            environment.set('authToken2', responseData.accessToken);",
+									"            console.log(responseData.accessToken)",
+									"            console.log('Successfully refreshed access token');",
+									"        } else {",
+									"            console.warn('Failed to refresh token:', responseData);",
+									"        }",
+									"    } catch (e) {",
+									"        console.error('Error parsing response:', e);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{authToken2}}"
+							}
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Comprehensive Update\",\n  \"description\": \"This is a comprehensive update of the code template.\",\n  \"content\": \"console.log('hello world!')\",\n  \"tags\": [\"javascript\", \"frontend\"],\n  \"language\": \"javascript\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/api/templates/{{forkedTemplateId}}",
+						"description": "### Update Template\n\nThis endpoint allows the user to update a specific template by making an HTTP PUT request to the specified URL.\n\n#### Request Body\n\n- The request should include a JSON payload with the following parameters:\n    \n    - `title` (string): The title of the template.\n        \n    - `description` (string): A description of the template.\n        \n    - `content` (string): The content of the template.\n        \n    - `tags` (array of strings): An array of tags associated with the template.\n        \n    - `language` (string): The programming language of the template.\n        \n\n#### Response\n\nThe response will be in JSON format with the following schema:\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"id\": { \"type\": \"number\" },\n    \"title\": { \"type\": \"string\" },\n    \"description\": { \"type\": \"string\" },\n    \"content\": { \"type\": \"string\" },\n    \"language\": { \"type\": \"string\" },\n    \"isForked\": { \"type\": \"boolean\" },\n    \"createdAt\": { \"type\": \"string\" },\n    \"updatedAt\": { \"type\": \"string\" },\n    \"authorId\": { \"type\": \"number\" },\n    \"originTemplateId\": { \"type\": \"number\" },\n    \"tags\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"id\": { \"type\": \"number\" },\n          \"name\": { \"type\": \"string\" }\n        }\n      }\n    }\n  }\n}\n\n ```"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
