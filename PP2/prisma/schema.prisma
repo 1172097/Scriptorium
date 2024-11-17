@@ -1,0 +1,156 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Models
+
+model User {
+  user_id          Int             @id @default(autoincrement())
+  username         String          @unique
+  email            String          @unique
+  password         String
+  first_name       String
+  last_name        String
+  profile_picture  String?         // Optional profile picture URL
+  phone            String?
+  role             String          @default("USER")
+  created_at       DateTime        @default(now())
+  updated_at       DateTime        @updatedAt
+  // Relations
+  code_templates   CodeTemplate[]
+  blog_posts       BlogPost[]
+  comments         Comment[]
+  ratings          Rating[]
+  reports          Report[]
+  dark_mode        Boolean         @default(false)
+}
+
+model CodeTemplate {
+  id               Int             @id @default(autoincrement())
+  title            String
+  description      String
+  content          String
+  language         String
+  isForked         Boolean         @default(false)
+
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  // Relations
+  authorId         Int
+  author           User            @relation(fields: [authorId], references: [user_id])     
+  tags             Tag[]           @relation("TemplateTags")
+  blogPost         BlogPost[]      @relation("BlogPostTemplates")
+  originTemplateId Int?
+  originTemplate   CodeTemplate?   @relation("SelfReference", fields: [originTemplateId], references: [id])
+  refTemplates     CodeTemplate[]  @relation("SelfReference")
+
+  @@index([title])
+  @@index([content])
+  @@unique([authorId, title])
+}
+
+model Tag {
+  id               Int             @id @default(autoincrement())
+  name             String          @unique
+
+  // Relations
+  codeTemplates    CodeTemplate[]  @relation("TemplateTags")
+  blogPosts        BlogPost[]      @relation("BlogPostTags") 
+
+  @@index([name])
+}
+
+model BlogPost {
+  id               Int             @id @default(autoincrement())
+  title            String
+  content          String
+
+  created_at       DateTime        @default(now())
+  updated_at       DateTime        @updatedAt
+
+  rating           Int             @default(0) // Calculated as upvotes - downvotes
+  numReports       Int             @default(0) 
+  isHidden         Boolean         @default(false)
+
+
+  // Relations
+  authorId         Int   
+  author           User            @relation(fields: [authorId], references: [user_id])
+  tags             Tag[]           @relation("BlogPostTags") 
+  templates        CodeTemplate[]  @relation("BlogPostTemplates")
+  comments         Comment[]
+  ratings          Rating[]        
+  reports          Report[]
+
+
+  @@index([title]) 
+  @@index([content]) 
+  @@index([rating]) 
+  @@index([numReports]) 
+}
+
+model Comment {
+  id               Int             @id @default(autoincrement())
+  content          String
+
+  created_at       DateTime        @default(now())
+  updated_at       DateTime        @updatedAt
+
+  rating           Int             @default(0) // Calculated as upvotes - downvotes
+  numReports       Int             @default(0) 
+  isHidden         Boolean         @default(false)
+
+  // Relations
+  authorId         Int   
+  author           User            @relation(fields: [authorId], references: [user_id])
+  postId           Int?
+  post             BlogPost?       @relation(fields: [postId], references: [id])
+  parentId         Int?
+  parent           Comment?        @relation("CommentReplies", fields: [parentId], references: [id])
+  replies          Comment[]       @relation("CommentReplies")
+  ratings          Rating[]        
+  reports          Report[]
+
+  @@index([rating]) 
+  @@index([numReports]) 
+}
+
+model Rating {
+  rating_id        Int             @id @default(autoincrement())
+  value            Int             // Upvote (+1) or downvote (-1)
+
+  // Relations
+  ownerId          Int
+  owner            User            @relation(fields: [ownerId], references: [user_id])
+  postId           Int?
+  post             BlogPost?       @relation(fields: [postId], references: [id])
+  commentId        Int?     
+  comment          Comment?        @relation(fields: [commentId], references: [id])
+
+  @@unique([ownerId, postId])
+  @@unique([ownerId, commentId])
+}
+
+model Report {
+  report_id        Int             @id @default(autoincrement())
+  reason           String          // Explanation for reporting the content
+
+  created_at       DateTime        @default(now())
+  
+  // Relations
+  ownerId          Int
+  owner            User            @relation(fields: [ownerId], references: [user_id])
+  postId           Int?
+  post             BlogPost?       @relation(fields: [postId], references: [id])
+  commentId        Int?     
+  comment          Comment?        @relation(fields: [commentId], references: [id])
+
+  @@unique([ownerId, postId])
+  @@unique([ownerId, commentId])
+}
