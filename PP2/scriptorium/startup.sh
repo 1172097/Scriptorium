@@ -30,3 +30,5 @@ echo "Creating admin user..."
 node utils/createAdmin.js
 
 echo "Setup complete. A new empty database has been created and an admin user has been set up."
+echo "username: admin"
+echo "password: password123"

@@ -8,55 +8,44 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
-  const { query, tag, template, page = 1, pageSize = 10 } = req.query;
+  const { query, tags = [], templates = [], page = 1, pageSize = 10 } = req.query;
   const sortBy = req.query.sortBy === 'asc' ? 'asc' : 'desc';
 
   try {
-    // Build the initial where clause for filtering by tags and templates
+    // Parse tags and templates into arrays of integers
+    const tagIds = Array.isArray(tags) 
+      ? tags.map(id => parseInt(id, 10)).filter(Number.isInteger) 
+      : tags.split(',').map(id => parseInt(id, 10)).filter(Number.isInteger);
+
+    const templateIds = Array.isArray(templates) 
+      ? templates.map(id => parseInt(id, 10)).filter(Number.isInteger) 
+      : templates.split(',').map(id => parseInt(id, 10)).filter(Number.isInteger);
+
+    // Build the where clause
     let whereClause = {
       isHidden: false,
       AND: [],
     };
 
-    // Initialize an array to hold the IDs of posts associated with the given tag or template
-    let postIds = [];
-
-    // Filter by tag if provided
-    if (tag) {
-      const tagPosts = await prisma.tag.findUnique({
-        where: { name: tag },
-        include: { blogPosts: true }, // Fetch associated blog posts
-      });
-      if (tagPosts) {
-        postIds = postIds.concat(tagPosts.blogPosts.map(post => post.id));
-      }
-    }
-
-    // Filter by template if provided
-    if (template) {
-      const templatePosts = await prisma.codeTemplate.findUnique({
-        where: { title: template },
-        include: { blogPost: true }, // Fetch associated blog posts
-      });
-      if (templatePosts) {
-        postIds = postIds.concat(templatePosts.blogPost.map(post => post.id));
-      }
-    }
-
-    // Filter by post IDs (only include posts associated with the specified tag or template)
-    if (postIds.length > 0) {
-      whereClause.AND.push({
-        id: { in: postIds },
-      });
-    }
-
-    // Add title and content filtering if a query is provided
+    // Ensure the post matches the query in title or content
     if (query) {
       whereClause.AND.push({
         OR: [
           { title: { contains: query } },
           { content: { contains: query } },
         ],
+      });
+    }
+
+    // Ensure the post matches at least one tag or template
+    if (tagIds.length > 0 || templateIds.length > 0) {
+      whereClause.AND.push({
+        OR: [
+          tagIds.length > 0 ? { tags: { some: { id: { in: tagIds } } } } : undefined,
+          templateIds.length > 0
+            ? { templates: { some: { id: { in: templateIds } } } }
+            : undefined,
+        ].filter(Boolean), // Remove undefined conditions
       });
     }
 
@@ -68,8 +57,16 @@ export default async function handler(req, res) {
       },
       include: {
         tags: true,
-        templates: true,
-        author: true,
+        templates: {
+          select: { 
+            title: true, // Only include the template's title
+          },
+        },
+        author: {
+          select: {
+            username: true, // Only include the author's name
+          },
+        },
       },
       skip: (page - 1) * pageSize, // Calculate offset for pagination
       take: parseInt(pageSize), // Limit the number of results

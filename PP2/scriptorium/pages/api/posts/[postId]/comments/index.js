@@ -23,7 +23,7 @@ export default async function handler(req, res) {
       const comments = await prisma.comment.findMany({
         where: { postId, isHidden: false, },
         orderBy: { rating: sortBy },
-        include: { author: true },
+        include: { author: { select: { username: true }}},
       });
 
       return res.status(200).json(comments); // Return the fetched comments
