@@ -1,3 +1,5 @@
+// This file was created with the assistance of GPT-4
+
 export const setTheme = (theme: "light" | "dark") => {
     document.documentElement.setAttribute("data-theme", theme);
     localStorage.setItem("theme", theme);
