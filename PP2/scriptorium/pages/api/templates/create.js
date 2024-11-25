@@ -62,7 +62,7 @@ async function handler(req, res) {
 
     if (!isForked && (!title || !description || !content || !language || !authorId)) {
         return res.status(400).json({
-        message: "Please provide all required fields: title, description, content, language, and authorId",
+            message: "Please provide all required fields: title, description, content, language, and authorId",
         });
     }
 
