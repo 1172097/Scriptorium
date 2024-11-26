@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import TemplateCard from '../components/TemplateCard';
-import NavBar from '../components/NavBar';
+import TemplateCard from '@/components/TemplateCard';
+import NavBar from '@/components/NavBar';
 
 interface Tag {
   id: string;

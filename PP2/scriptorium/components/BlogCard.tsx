@@ -1,39 +1,101 @@
 // This file was created with the assistance of GPT-4
 import React from "react";
-import { Link } from "react-router-dom";
 
-interface BlogCardProps {
+interface Tag {
   id: string;
-  title: string;
-  author: string;
-  summary: string;
-  tags: string[];
+  name: string;
 }
 
-const BlogCard: React.FC<BlogCardProps> = ({ id, title, author, summary, tags }) => {
+interface Author {
+  username: string;
+  profile_picture?: string;
+}
+
+interface BlogPost {
+  id: string;
+  title: string;
+  content: string;
+  tags?: Tag[];
+  author: Author;
+  created_at: string;
+  rating: number;
+}
+
+interface BlogCardProps {
+  post: BlogPost;
+}
+
+const BlogCard: React.FC<BlogCardProps> = ({ post }) => {
+  // Format the created date using native JavaScript
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return "Invalid Date"; // Handle invalid dates
+    return date.toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
+
+  const formattedDate = formatDate(post.created_at);
+
   return (
-    <div className="p-4 bg-[var(--card-background)] text-[var(--text-primary)] rounded shadow-md hover:shadow-lg transition-shadow">
-      <h2 className="text-lg font-semibold mb-2">{title}</h2>
-      <p className="text-sm text-[var(--text-secondary)] mb-2">By: {author}</p>
-      <p className="text-sm text-[var(--text-secondary)] mb-4">
-        {summary.length > 100 ? `${summary.slice(0, 100)}...` : summary}
-      </p>
-      <div className="flex flex-wrap gap-2 mb-4">
-        {tags.map((tag) => (
-          <span
-            key={tag}
-            className="bg-[var(--highlight)] text-[var(--text-primary)] px-2 py-1 text-xs rounded"
-          >
-            {tag}
-          </span>
-        ))}
+    <div
+      className="bg-[var(--card-background)] text-[var(--text-primary)] 
+                 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300"
+    >
+      {/* Post Title */}
+      <div className="flex items-center justify-between pb-2">
+        <div className="flex items-center space-x-2">
+          <span className="text-xl font-semibold">{post.title}</span>
+        </div>
+
+        {/* Post Rating */}
+        <div className="flex items-center space-x-1">
+          <span>⬆</span>
+          <span className="text-lg font-bold">{post.rating}</span>
+        </div>
       </div>
-      <Link
-        to={`/blog/${id}`}
-        className="text-sm text-white bg-[var(--text-primary)] px-4 py-2 rounded hover:bg-[var(--button-hover)]"
-      >
-        Read More
-      </Link>
+
+      {/* Post Content (Truncated) */}
+      <div className="mt-4">
+        <p className="mb-4">{post.content.substring(0, 100)}...</p>
+
+        {/* Tags */}
+        <div className="flex overflow-hidden">
+          {post.tags && post.tags.length > 0 ? (
+            <div className="flex space-x-2">
+              {post.tags.slice(0, 3).map((tag) => (
+                <span
+                  key={tag.id}
+                  className="px-3 py-1 text-sm rounded-lg bg-[var(--highlight)] opacity-80"
+                >
+                  {tag.name}
+                </span>
+              ))}
+            </div>
+          ) : (
+            // Render empty space to preserve layout
+            <div className="h-6"></div>
+          )}
+        </div>
+
+        {/* Author and Date */}
+        <div className="mt-4 flex justify-between items-center">
+          {/* Author */}
+          <div className="flex items-center space-x-2">
+            <img
+              src={post.author.profile_picture || "/api/placeholder/32/32"}
+              alt={post.author.username}
+              className="h-8 w-8 rounded-full"
+            />
+            <span className="text-sm">{post.author.username}</span>
+          </div>
+
+          {/* Date Created */}
+          <span className="text-sm">{formattedDate}</span>
+        </div>
+      </div>
     </div>
   );
 };

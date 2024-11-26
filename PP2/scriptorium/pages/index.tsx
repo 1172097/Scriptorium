@@ -13,19 +13,13 @@ const Home: React.FC = () => {
       </p>
       <div className="flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4">
         <Link
-          href="/login"
-          className="w-full md:w-auto text-center px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
-        >
-          Login
-        </Link>
-        <Link
-          href="/signup"
+          href="/p"
           className="w-full md:w-auto text-center px-4 py-2 bg-gray-300 text-gray-900 rounded-lg hover:bg-gray-200 transition-colors"
         >
-          Signup
+          Explore Posts
         </Link>
         <Link
-          href="/templates"
+          href="/t"
           className="w-full md:w-auto text-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors"
         >
           Explore Templates

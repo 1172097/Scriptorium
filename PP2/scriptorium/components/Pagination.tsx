@@ -8,53 +8,38 @@ interface PaginationProps {
 }
 
 const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPageChange }) => {
-  const getPaginationRange = () => {
-    const range = [];
-    for (let i = 1; i <= totalPages; i++) {
-      range.push(i);
-    }
-    return range;
+  const handlePrevious = () => {
+    if (currentPage > 1) onPageChange(currentPage - 1);
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages) onPageChange(currentPage + 1);
   };
 
   return (
-    <div className="flex justify-center items-center gap-2 mt-4">
-      {/* Previous Button */}
+    <div className="flex justify-center items-center space-x-4 mt-4">
       <button
-        className={`px-3 py-1 text-sm rounded ${
-          currentPage === 1
-            ? "bg-gray-300 cursor-not-allowed"
-            : "bg-[var(--text-primary)] text-white hover:bg-[var(--button-hover)]"
-        }`}
-        onClick={() => onPageChange(currentPage - 1)}
+        onClick={handlePrevious}
         disabled={currentPage === 1}
+        className={`px-4 py-2 bg-gray-300 rounded-lg ${
+          currentPage === 1
+            ? "cursor-not-allowed text-gray-400"
+            : "hover:bg-gray-200 text-gray-900"
+        }`}
       >
         Previous
       </button>
-
-      {/* Page Numbers */}
-      {getPaginationRange().map((page) => (
-        <button
-          key={page}
-          className={`px-3 py-1 text-sm rounded ${
-            page === currentPage
-              ? "bg-[var(--highlight)] text-[var(--text-primary)]"
-              : "bg-[var(--card-background)] text-[var(--text-primary)] hover:bg-[var(--button-hover)]"
-          }`}
-          onClick={() => onPageChange(page)}
-        >
-          {page}
-        </button>
-      ))}
-
-      {/* Next Button */}
+      <span className="text-sm text-gray-900 dark:text-gray-100">
+        Page {currentPage} of {totalPages}
+      </span>
       <button
-        className={`px-3 py-1 text-sm rounded ${
-          currentPage === totalPages
-            ? "bg-gray-300 cursor-not-allowed"
-            : "bg-[var(--text-primary)] text-white hover:bg-[var(--button-hover)]"
-        }`}
-        onClick={() => onPageChange(currentPage + 1)}
+        onClick={handleNext}
         disabled={currentPage === totalPages}
+        className={`px-4 py-2 bg-gray-300 rounded-lg ${
+          currentPage === totalPages
+            ? "cursor-not-allowed text-gray-400"
+            : "hover:bg-gray-200 text-gray-900"
+        }`}
       >
         Next
       </button>

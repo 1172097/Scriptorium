@@ -57,14 +57,14 @@ const Navbar: React.FC = () => {
 
             {/* Desktop Navigation Links */}
             <div className="hidden md:flex items-center space-x-8">
-              <Link href="/templates">
+              <Link href="/t">
                 <span className="text-sm text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300 cursor-pointer transition-colors">
                   Templates
                 </span>
               </Link>
-              <Link href="/blog">
+              <Link href="/p">
                 <span className="text-sm text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300 cursor-pointer transition-colors">
-                  Blog
+                  Posts
                 </span>
               </Link>
               <Link href="/about">
