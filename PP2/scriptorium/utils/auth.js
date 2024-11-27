@@ -4,11 +4,16 @@ import bcrypt from "bcrypt";
 import ms from 'ms';
 import jwt from "jsonwebtoken";
 
-const BCRYPT_SALT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS);
-const JWT_SECRET = process.env.JWT_SECRET;
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN;
-const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
-const JWT_REFRESH_EXPIRES_IN = process.env.JWT_REFRESH_EXPIRES_IN;
+// const BCRYPT_SALT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS);
+// const JWT_SECRET = process.env.JWT_SECRET;
+// const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN;
+// const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
+// const JWT_REFRESH_EXPIRES_IN = process.env.JWT_REFRESH_EXPIRES_IN;
+const BCRYPT_SALT_ROUNDS = 10;
+const JWT_SECRET = "912001212asdfasnweirwer";
+const JWT_EXPIRES_IN = "1h";
+const JWT_REFRESH_SECRET = "8234091afsdweuwerncoirf";
+const JWT_REFRESH_EXPIRES_IN = "2d";
 
 export async function hashPassword(password) {
   return await bcrypt.hash(password, BCRYPT_SALT_ROUNDS);
@@ -20,6 +25,11 @@ export async function comparePassword(password, hash) {
 
 
 export function generateToken(user, is_refresh_token = false) {
+  // console.log(BCRYPT_SALT_ROUNDS)
+  // console.log(JWT_SECRET)
+  // console.log(JWT_EXPIRES_IN)
+  // console.log(JWT_REFRESH_SECRET)
+  // console.log(JWT_REFRESH_EXPIRES_IN)
   const payload = {
     user_id: user.user_id,
     role: user.role,

@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-
+import { useRouter } from 'next/router';
 
 interface FormData {
-  name: string;
   username: string;
   email: string;
   password: string;
@@ -11,12 +10,13 @@ interface FormData {
 
 export default function SignUp() {
   const [formData, setFormData] = useState<FormData>({
-    name: '',
     username: '',
     email: '',
     password: '',
     confirmPassword: '',
   });
+
+  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({
@@ -25,13 +25,40 @@ export default function SignUp() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
       alert('Passwords do not match');
       return;
     }
-    console.log('Form submitted:', formData);
+
+    try {
+      const response = await fetch('http://localhost:3000/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: formData.username,
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        alert(`Error: ${errorData.message}`);
+        return;
+      }
+
+      const data = await response.json();
+      console.log('Form submitted:', data);
+      alert('Registration successful!');
+      router.push('/login'); // Redirect to login page
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      alert('An error occurred. Please try again.');
+    }
   };
 
   return (
@@ -42,7 +69,6 @@ export default function SignUp() {
         </h1>
         
         <form onSubmit={handleSubmit} className="space-y-6">
-
           <div>
             <label 
               htmlFor="username" 
