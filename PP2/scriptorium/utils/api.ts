@@ -23,9 +23,9 @@ export const fetchWrapper = async (
 ): Promise<any> => {
   let token: string | null = null;
 
-  // Use localStorage only on the client side
+  // Use sessionStorage only on the client side
   if (typeof window !== "undefined") {
-    token = localStorage.getItem("token");
+    token = sessionStorage.getItem("token");
   }
 
   const headers: HeadersInit = {
@@ -49,7 +49,7 @@ export const fetchWrapper = async (
       if (response.status === 401) {
         // Redirect to login on unauthorized access
         if (typeof window !== "undefined") {
-          localStorage.removeItem("token");
+          sessionStorage.removeItem("token");
           window.location.href = "/login";
         }
       }

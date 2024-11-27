@@ -2,17 +2,17 @@
 
 // Save the JWT token to localStorage
 export const saveToken = (token: string): void => {
-  localStorage.setItem("token", token);
+  sessionStorage.setItem("token", token);
 };
 
 // Retrieve the JWT token from localStorage
 export const getToken = (): string | null => {
-  return localStorage.getItem("token");
+  return sessionStorage.getItem("token");
 };
 
 // Remove the JWT token from localStorage
 export const removeToken = (): void => {
-  localStorage.removeItem("token");
+  sessionStorage.removeItem("token");
 };
 
 // Check if the user is authenticated by verifying token existence

@@ -1,5 +1,14 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
+const bcrypt = require("bcrypt");
+
+// Get the salt rounds from environment variable or default to 10
+const BCRYPT_SALT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS) || 10;
+
+async function hashPassword(password) {
+  return await bcrypt.hash(password, BCRYPT_SALT_ROUNDS);
+}
+
 
 const seedDatabase = async () => {
   try {
@@ -7,19 +16,20 @@ const seedDatabase = async () => {
 
     // Create users
     const users = await Promise.all(
-      Array.from({ length: 10 }).map((_, i) =>
-        prisma.user.create({
+      Array.from({ length: 10 }).map(async (_, i) => {
+        const hashedPassword = await hashPassword(`password${i + 1}`);
+        return prisma.user.create({
           data: {
             username: `user${i + 1}`,
             email: `user${i + 1}@example.com`,
-            password: `password${i + 1}`,
+            password: hashedPassword, // Save hashed password
             first_name: `First${i + 1}`,
             last_name: `Last${i + 1}`,
-            profile_picture: `/public/profiles/user${i + 1}.png`,
+            profile_picture: `/incognito.png`,
             phone: `123-456-78${i}`,
           },
-        })
-      )
+        });
+      })
     );
 
     // Create tags

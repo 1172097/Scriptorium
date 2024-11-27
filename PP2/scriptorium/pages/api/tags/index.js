@@ -2,12 +2,12 @@ import prisma from "@/utils/db";
 
 export default async function handler(req, res) {
   if (req.method === 'GET') {
-    const { page = 1, pageSize = 10, search = '' } = req.query;
+    const { page = 1, pageSize = 10, query = '' } = req.query;
 
     try {
       // Search and sort tags by name with pagination
       const tags = await prisma.tag.findMany({
-        where: { name: { contains: search } },
+        where: { name: { contains: query } },
         orderBy: {
           name: 'asc' // Always sort by name in ascending order
         },
@@ -19,7 +19,7 @@ export default async function handler(req, res) {
       const totalTags = await prisma.tag.count({
         where: {
           name: {
-            contains: search,
+            contains: query,
           }
         }
       });

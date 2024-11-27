@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { isAuthenticated, removeToken } from "@/utils/authFront"; // Import auth utilities
+import { useRouter } from "next/router";
 
 const Navbar: React.FC = () => {
-  // Mobile menu state
   const [menuOpen, setMenuOpen] = useState(false);
-
-  // Dark mode state
   const [darkMode, setDarkMode] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login state
+  const router = useRouter();
 
   // Toggle dark mode and save preference
   const toggleDarkMode = () => {
@@ -34,6 +35,17 @@ const Navbar: React.FC = () => {
       document.documentElement.removeAttribute("data-theme");
     }
   }, []);
+
+  useEffect(() => {
+    // Update login state on component mount
+    setIsLoggedIn(isAuthenticated());
+  }, []);
+
+  const handleSignOut = () => {
+    removeToken(); // Clear the token
+    setIsLoggedIn(false); // Update state
+    router.push("/login"); // Redirect to login page
+  };
 
   return (
     <>
@@ -78,28 +90,43 @@ const Navbar: React.FC = () => {
                   About
                 </span>
               </Link>
-            </div>
 
-            {/* Theme Toggle Button */}
-            <button
-              onClick={toggleDarkMode}
-              className="hidden md:block text-sm text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300"
-            >
-              {darkMode ? "Light Mode" : "Dark Mode"}
-            </button>
+              <button
+                onClick={toggleDarkMode}
+                className="text-sm text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300"
+              >
+                {darkMode ? "Light Mode" : "Dark Mode"}
+              </button>
 
-            {/* Authentication Section */}
-            <div className="space-x-4">
-              <Link href="/login">
-                <span className="cursor-pointer text-sm text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300">
-                  Login
-                </span>
-              </Link>
-              <Link href="/signup">
-                <span className="cursor-pointer text-sm bg-gray-900 hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 text-white dark:text-gray-900 px-4 py-1.5 rounded-lg transition-colors">
-                  Signup
-                </span>
-              </Link>
+              {/* Authentication Section */}
+              {isLoggedIn ? (
+                <div className="space-x-4 flex items-center">
+                  <Link href="/profile">
+                    <span className="cursor-pointer text-sm text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300">
+                      Profile
+                    </span>
+                  </Link>
+                  <button
+                    onClick={handleSignOut}
+                    className="cursor-pointer text-sm bg-gray-900 hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 text-white dark:text-gray-900 px-4 py-1.5 rounded-lg transition-colors"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              ) : (
+                <div className="space-x-4">
+                  <Link href="/login">
+                    <span className="cursor-pointer text-sm text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300">
+                      Login
+                    </span>
+                  </Link>
+                  <Link href="/signup">
+                    <span className="cursor-pointer text-sm bg-gray-900 hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 text-white dark:text-gray-900 px-4 py-1.5 rounded-lg transition-colors">
+                      Signup
+                    </span>
+                  </Link>
+                </div>
+              )}
             </div>
 
             {/* Mobile Menu Button */}
@@ -116,14 +143,14 @@ const Navbar: React.FC = () => {
         {/* Mobile Menu */}
         {menuOpen && (
           <div className="fixed top-14 left-0 w-full bg-white dark:bg-gray-900 shadow-md backdrop-blur-sm p-4 shadow-lg md:hidden border-b border-gray-200 dark:border-gray-800">
-            <Link href="/templates">
+            <Link href="/t">
               <div className="block mb-2 text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300">
                 Templates
               </div>
             </Link>
-            <Link href="/blog">
+            <Link href="/p">
               <div className="block mb-2 text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300">
-                Blog
+                Posts
               </div>
             </Link>
             <Link href="/about">
@@ -131,16 +158,34 @@ const Navbar: React.FC = () => {
                 About
               </div>
             </Link>
-            <Link href="/login">
-              <div className="block mt-4 text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300">
-                Login
-              </div>
-            </Link>
-            <Link href="/signup">
-              <div className="block mt-2 text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300">
-                Signup
-              </div>
-            </Link>
+            {isLoggedIn ? (
+              <>
+                <Link href="/profile">
+                  <div className="block mt-4 text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300">
+                    Profile
+                  </div>
+                </Link>
+                <button
+                  onClick={handleSignOut}
+                  className="block mt-2 text-sm text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300"
+                >
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link href="/login">
+                  <div className="block mt-4 text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300">
+                    Login
+                  </div>
+                </Link>
+                <Link href="/signup">
+                  <div className="block mt-2 text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300">
+                    Signup
+                  </div>
+                </Link>
+              </>
+            )}
             <button
               onClick={toggleDarkMode}
               className="block mt-4 text-sm text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300"

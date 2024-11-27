@@ -87,8 +87,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ post }) => {
             {/* Author */}
             <div className="flex items-center space-x-2">
               <img
-                // src={post.author.profile_picture || "/api/placeholder/32/32"}
-                src={"/incognito.png"}
+                src={post.author.profile_picture || "/api/placeholder/32/32"}
                 alt={post.author.username}
                 className="h-8 w-8 rounded-full"
               />
