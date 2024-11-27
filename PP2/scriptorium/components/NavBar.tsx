@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { isAuthenticated, removeToken } from "@/utils/authFront"; // Import auth utilities
+import { isAuthenticated, removeToken } from "@/utils/authFront";
 import { useRouter } from "next/router";
 
 const Navbar: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login state
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
 
-  // Toggle dark mode and save preference
   const toggleDarkMode = () => {
     const newMode = !darkMode;
     setDarkMode(newMode);
@@ -39,6 +38,17 @@ const Navbar: React.FC = () => {
   useEffect(() => {
     // Update login state on component mount
     setIsLoggedIn(isAuthenticated());
+
+    // Listen for login success event
+    const handleLoginSuccess = () => {
+      setIsLoggedIn(isAuthenticated());
+    };
+
+    window.addEventListener("userLoggedIn", handleLoginSuccess);
+
+    return () => {
+      window.removeEventListener("userLoggedIn", handleLoginSuccess);
+    };
   }, []);
 
   const handleSignOut = () => {
@@ -49,10 +59,7 @@ const Navbar: React.FC = () => {
 
   return (
     <>
-      <nav
-        className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md dark:bg-gray-900 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800"
-        aria-label="Main Navigation"
-      >
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md dark:bg-gray-900 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="h-14 flex items-center justify-between">
             {/* Logo */}
@@ -76,17 +83,17 @@ const Navbar: React.FC = () => {
             {/* Desktop Navigation Links */}
             <div className="hidden md:flex items-center space-x-8">
               <Link href="/t">
-                <span className="text-sm text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300 cursor-pointer transition-colors">
+                <span className="text-sm text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300">
                   Templates
                 </span>
               </Link>
               <Link href="/p">
-                <span className="text-sm text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300 cursor-pointer transition-colors">
+                <span className="text-sm text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300">
                   Posts
                 </span>
               </Link>
               <Link href="/about">
-                <span className="text-sm text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300 cursor-pointer transition-colors">
+                <span className="text-sm text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300">
                   About
                 </span>
               </Link>

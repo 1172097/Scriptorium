@@ -45,6 +45,12 @@ export default function Login() {
       const data = await response.json();
       // Store token in sessionStorage
       sessionStorage.setItem('token', data.token);
+
+      // Emit login event
+      const event = new Event("userLoggedIn");
+      window.dispatchEvent(event);
+
+      
       // Store refresh token in cookies with HttpOnly flag
       document.cookie = `refreshToken=${data.refreshToken}; path=/; max-age=172800; SameSite=Strict`;
       
