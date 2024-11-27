@@ -39,10 +39,10 @@ export default async function handler(req, res) {
           username,
           email,
           password: hashedPassword,
-          first_name: firstName,
-          last_name: lastName,
+          first_name: "",
+          last_name: "",
           profile_picture: "/public/default_profile_pic.png",
-          phone,
+          // phone,
           role,
         },
     // select: {
