@@ -1,5 +1,6 @@
 // This file was created with the assistance of GPT-4
 import React from "react";
+import Link from "next/link";
 
 interface Tag {
   id: string;
@@ -40,63 +41,65 @@ const BlogCard: React.FC<BlogCardProps> = ({ post }) => {
   const formattedDate = formatDate(post.created_at);
 
   return (
-    <div
-      className="bg-[var(--card-background)] text-[var(--text-primary)] 
-                 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300"
-    >
-      {/* Post Title */}
-      <div className="flex items-center justify-between pb-2">
-        <div className="flex items-center space-x-2">
-          <span className="text-xl font-semibold">{post.title}</span>
-        </div>
-
-        {/* Post Rating */}
-        <div className="flex items-center space-x-1">
-          <span>⬆</span>
-          <span className="text-lg font-bold">{post.rating}</span>
-        </div>
-      </div>
-
-      {/* Post Content (Truncated) */}
-      <div className="mt-4">
-        <p className="mb-4">{post.content.substring(0, 100)}...</p>
-
-        {/* Tags */}
-        <div className="flex overflow-hidden">
-          {post.tags && post.tags.length > 0 ? (
-            <div className="flex space-x-2">
-              {post.tags.slice(0, 3).map((tag) => (
-                <span
-                  key={tag.id}
-                  className="px-3 py-1 text-sm rounded-lg bg-[var(--highlight)] opacity-80"
-                >
-                  {tag.name}
-                </span>
-              ))}
-            </div>
-          ) : (
-            // Render empty space to preserve layout
-            <div className="h-6"></div>
-          )}
-        </div>
-
-        {/* Author and Date */}
-        <div className="mt-4 flex justify-between items-center">
-          {/* Author */}
+    <Link href={`/p/${post.id}`} passHref>
+      <div
+        className="cursor-pointer bg-[var(--card-background)] text-[var(--text-primary)] 
+                   rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300"
+      >
+        {/* Post Title */}
+        <div className="flex items-center justify-between pb-2">
           <div className="flex items-center space-x-2">
-            <img
-              src={post.author.profile_picture || "/api/placeholder/32/32"}
-              alt={post.author.username}
-              className="h-8 w-8 rounded-full"
-            />
-            <span className="text-sm">{post.author.username}</span>
+            <span className="text-xl font-semibold">{post.title}</span>
           </div>
 
-          {/* Date Created */}
-          <span className="text-sm">{formattedDate}</span>
+          {/* Post Rating */}
+          <div className="flex items-center space-x-1">
+            <span>⬆</span>
+            <span className="text-lg font-bold">{post.rating}</span>
+          </div>
+        </div>
+
+        {/* Post Content (Truncated) */}
+        <div className="mt-4">
+          <p className="mb-4">{post.content.substring(0, 100)}...</p>
+
+          {/* Tags */}
+          <div className="flex overflow-hidden">
+            {post.tags && post.tags.length > 0 ? (
+              <div className="flex space-x-2">
+                {post.tags.slice(0, 3).map((tag) => (
+                  <span
+                    key={tag.id}
+                    className="px-3 py-1 text-sm rounded-lg bg-[var(--highlight)] opacity-80"
+                  >
+                    {tag.name}
+                  </span>
+                ))}
+              </div>
+            ) : (
+              // Render empty space to preserve layout
+              <div className="h-6"></div>
+            )}
+          </div>
+
+          {/* Author and Date */}
+          <div className="mt-4 flex justify-between items-center">
+            {/* Author */}
+            <div className="flex items-center space-x-2">
+              <img
+                src={post.author.profile_picture || "/api/placeholder/32/32"}
+                alt={post.author.username}
+                className="h-8 w-8 rounded-full"
+              />
+              <span className="text-sm">{post.author.username}</span>
+            </div>
+
+            {/* Date Created */}
+            <span className="text-sm">{formattedDate}</span>
+          </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

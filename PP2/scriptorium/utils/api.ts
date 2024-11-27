@@ -2,11 +2,16 @@
 
 // Dynamically set the base URL based on the current environment
 const getBaseURL = (): string => {
-  if (window.location.hostname === "localhost") {
-    return "http://localhost:3000/api"; // Development backend URL
-  } else {
+  if (typeof window !== "undefined") {
+    // Check if running on localhost for development
+    if (window.location.hostname === "localhost") {
+      return "http://localhost:3000/api"; // Development backend URL
+    }
     return `${window.location.origin}/api`; // Production backend URL
   }
+
+  // Fallback for environments where `window` is not defined
+  return "http://localhost:3000/api"; // Default to localhost in SSR
 };
 
 const BASE_URL = getBaseURL();
@@ -16,7 +21,12 @@ export const fetchWrapper = async (
   endpoint: string,
   options: RequestInit = {}
 ): Promise<any> => {
-  const token = localStorage.getItem("token");
+  let token: string | null = null;
+
+  // Use localStorage only on the client side
+  if (typeof window !== "undefined") {
+    token = localStorage.getItem("token");
+  }
 
   const headers: HeadersInit = {
     "Content-Type": "application/json",
@@ -38,8 +48,10 @@ export const fetchWrapper = async (
     if (!response.ok) {
       if (response.status === 401) {
         // Redirect to login on unauthorized access
-        localStorage.removeItem("token");
-        window.location.href = "/login";
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("token");
+          window.location.href = "/login";
+        }
       }
       const errorData = await response.json();
       throw new Error(errorData.message || "Something went wrong");

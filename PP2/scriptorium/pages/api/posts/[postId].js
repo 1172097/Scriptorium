@@ -1,5 +1,5 @@
 import prisma from "@/utils/db";
-import { attachUser } from "../../../utils/middleware";
+import { attachUser } from "@/utils/middleware";
 
 // This API handler was made with the assistance of ChatGPT.
 
@@ -16,10 +16,29 @@ async function handler(req, res) {
         const post = await prisma.blogPost.findUnique({
         where: { id: Number(postId) }, // Ensure id is a number
         include: {
-          tags: true,       // Include associated tags
-          templates: true,  // Include associated templates
-          author: true,     // Include author details
-          ratings: true,    // Include ratings  
+          tags: true,
+          templates: {
+            select: { 
+              id: true,
+              title: true // Only include the template's title
+            },
+          },
+          author: {
+            select: {
+              profile_picture: true,
+              username: true, // Only include the author's name
+            },
+          },
+          comments: {
+            include: {
+              author: {
+                select: {
+                  profile_picture: true,
+                  username: true, // Only include the author's name
+                },
+              },
+            }
+          }
         },
       });
 

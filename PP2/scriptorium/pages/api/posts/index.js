@@ -64,6 +64,7 @@ export default async function handler(req, res) {
         },
         author: {
           select: {
+            profile_picture: true,
             username: true, // Only include the author's name
           },
         },

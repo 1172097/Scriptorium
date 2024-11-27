@@ -1,4 +1,3 @@
-// This file was created with the assistance of GPT-4
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -10,22 +9,29 @@ const Navbar: React.FC = () => {
   // Dark mode state
   const [darkMode, setDarkMode] = useState(false);
 
-  // Toggle dark mode
+  // Toggle dark mode and save preference
   const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-    if (!darkMode) {
+    const newMode = !darkMode;
+    setDarkMode(newMode);
+
+    if (newMode) {
       document.documentElement.setAttribute("data-theme", "dark");
+      localStorage.setItem("theme", "dark");
     } else {
       document.documentElement.removeAttribute("data-theme");
+      localStorage.setItem("theme", "light");
     }
   };
 
   useEffect(() => {
-    // Set initial theme based on user's preference or default
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    if (prefersDark) {
+    // Set theme based on saved preference
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
       setDarkMode(true);
       document.documentElement.setAttribute("data-theme", "dark");
+    } else {
+      setDarkMode(false);
+      document.documentElement.removeAttribute("data-theme");
     }
   }, []);
 
@@ -42,10 +48,10 @@ const Navbar: React.FC = () => {
               <Link href="/" aria-label="Scriptorium Home">
                 <div className="flex items-center cursor-pointer">
                   <Image
-                    src="/logo.jpg" // Path to the logo file
+                    src="/logo.jpg"
                     alt="Scriptorium Logo"
-                    width={40} // Logo width
-                    height={40} // Logo height
+                    width={40}
+                    height={40}
                     className="rounded-full"
                   />
                   <span className="ml-2 text-lg font-semibold text-gray-900 dark:text-white">
@@ -125,12 +131,12 @@ const Navbar: React.FC = () => {
                 About
               </div>
             </Link>
-            <Link href="/auth/login">
+            <Link href="/login">
               <div className="block mt-4 text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300">
                 Login
               </div>
             </Link>
-            <Link href="/auth/signup">
+            <Link href="/signup">
               <div className="block mt-2 text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300">
                 Signup
               </div>
