@@ -10,7 +10,7 @@ async function handler(req, res) {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
-  const { page = 1, pageSize = 10 } = req.query;
+  const { page = 1, pageSize = 6 } = req.query;
 
   try {
     // Fetch posts sorted by report count with pagination
