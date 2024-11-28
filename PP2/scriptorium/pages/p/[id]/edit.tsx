@@ -32,6 +32,17 @@ const EditPostPage: React.FC = () => {
 
       try {
         const data = await api.get(`/posts/${id}`);
+
+        const token = typeof window !== "undefined" ? sessionStorage.getItem("token") : null;
+        if (!token) {
+          router.push("/login");
+          return;
+        }
+        const userData = await api.get("/auth/profile");
+        if(userData.user.user_id !== data.post.authorId){
+          router.push("/p");
+        }
+
         setTitle(data.post.title);
         setContent(data.post.content);
         setTags(data.post.tags.map((tag: any) => tag.id));

@@ -62,6 +62,7 @@ const Navbar: React.FC = () => {
     // Listen for login success event
     const handleLoginSuccess = () => {
       setIsLoggedIn(isAuthenticated());
+      router.reload();
     };
 
     window.addEventListener("userLoggedIn", handleLoginSuccess);
