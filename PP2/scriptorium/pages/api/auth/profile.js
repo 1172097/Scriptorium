@@ -30,6 +30,7 @@ async function handler(req, res) {
           phone: true,
           created_at: true,
           updated_at: true,
+          role: true,
         },
       });
 
