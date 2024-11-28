@@ -154,129 +154,126 @@ const CodeTemplateList: React.FC = () => {
   };
 
   return (
-    <>
-      {/* <NavBar /> */}
-      <div className="min-h-screen pt-20 p-6 bg-[#FEF7FF] dark:bg-[#3F384C]">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-between mb-8">
-            <h1 className="text-3xl font-bold text-[#6A5294] dark:text-[#D4BBFF]">
-              Code Templates
-            </h1>
-            <Link href="/create_template" 
-                  className="text-[#6A5294] dark:text-[#D4BBFF] hover:opacity-80 transition-opacity">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" 
-                   stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-              </svg>
-            </Link>
-          </div>
-          
-          <div className="flex flex-col gap-4 mb-6">
+    <div className="min-h-screen bg-[var(--background-primary)] text-[var(--text-primary)] p-6">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-3xl font-bold text-[var(--text-primary)]">
+            Code Templates
+          </h1>
+          <Link href="/create_template" 
+                className="text-[var(--text-primary)] hover:opacity-80 transition-opacity">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" 
+                 stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </Link>
+        </div>
+        
+        <div className="flex flex-col gap-4 mb-6">
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search content or title..."
+            className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-[var(--card-background)] text-[var(--text-primary)]"
+          />
+
+          <div className="relative" ref={tagDropdownRef}>
             <input
               type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search content or title..."
+              value={tagQuery}
+              onClick={() => setIsTagDropdownOpen(true)}
+              onChange={(e) => setTagQuery(e.target.value)}
+              placeholder="Search tags..."
               className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-[var(--card-background)] text-[var(--text-primary)]"
             />
-
-            <div className="relative" ref={tagDropdownRef}>
-              <input
-                type="text"
-                value={tagQuery}
-                onClick={() => setIsTagDropdownOpen(true)}
-                onChange={(e) => setTagQuery(e.target.value)}
-                placeholder="Search tags..."
-                className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-[var(--card-background)] text-[var(--text-primary)]"
-              />
-              {isTagDropdownOpen && (
-                <div className="absolute top-full mt-2 w-full bg-white dark:bg-gray-900 rounded-lg shadow-lg max-h-40 overflow-y-auto z-10">
-                  {allTags.map((tag) => (
-                    <div
-                      key={tag.id}
-                      onClick={() => addTag(tag)}
-                      className={`px-4 py-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 ${
-                        tags.includes(tag.id) ? "bg-blue-100 dark:bg-blue-900" : ""
-                      }`}
-                    >
-                      {tag.name}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <div className="flex flex-wrap gap-2">
-              {selectedTagDetails.map((tag) => (
-                <button
-                  key={tag.id}
-                  onClick={() => removeTag(tag.id)}
-                  className="ml-2 text-sm"
-                >
-                  <span className="mr-2">{tag.name}</span>
-                  ×
-                </button>
-              ))}
-            </div>
-
-            <div className="flex space-x-4">
-              <button
-                onClick={clearFilters}
-                className="px-4 py-2 rounded-lg bg-[#6A5294] text-white dark:bg-[#D4BBFF] dark:text-gray-900"
-              >
-                Clear Filters
-              </button>
-
-              <button
-                onClick={toggleSortOrder}
-                className="px-4 py-2 rounded-lg bg-[#6A5294] text-white dark:bg-[#D4BBFF] dark:text-gray-900"
-              >
-                Sort: {sortOrder === "asc" ? "Ascending" : "Descending"}
-              </button>
-            </div>
+            {isTagDropdownOpen && (
+              <div className="absolute top-full mt-2 w-full bg-white dark:bg-gray-900 rounded-lg shadow-lg max-h-40 overflow-y-auto z-10">
+                {allTags.map((tag) => (
+                  <div
+                    key={tag.id}
+                    onClick={() => addTag(tag)}
+                    className={`px-4 py-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 ${
+                      tags.includes(tag.id) ? "bg-blue-100 dark:bg-blue-900" : ""
+                    }`}
+                  >
+                    {tag.name}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
-          {loading ? (
-            <div className="flex justify-center items-center h-64">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#6A5294] dark:border-[#D4BBFF]"></div>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {templates.map((template) => (
-                <Link 
-                  key={template.id} 
-                  href={`/t/${template.id}`} 
-                  className="transition-transform hover:scale-105"
-                >
-                  <TemplateCard template={template} />
-                </Link>
-              ))}
-            </div>
-          )}
+          <div className="flex flex-wrap gap-2">
+            {selectedTagDetails.map((tag) => (
+              <button
+                key={tag.id}
+                onClick={() => removeTag(tag.id)}
+                className="ml-2 text-sm"
+              >
+                <span className="mr-2">{tag.name}</span>
+                ×
+              </button>
+            ))}
+          </div>
 
-          <div className="flex justify-center gap-4 mt-6">
+          <div className="flex space-x-4">
             <button
-              onClick={() => handlePageChange(page - 1)}
-              disabled={page === 1}
-              className="px-4 py-2 rounded-lg bg-[#6A5294] text-white dark:bg-[#D4BBFF] dark:text-gray-900 disabled:opacity-50"
+              onClick={clearFilters}
+              className="px-4 py-2 rounded-lg bg-[#6A5294] text-white dark:bg-[#D4BBFF] dark:text-gray-900"
             >
-              Previous
+              Clear Filters
             </button>
-            <span className="py-2">
-              Page {page} of {totalPages}
-            </span>
+
             <button
-              onClick={() => handlePageChange(page + 1)}
-              disabled={!hasMore}
-              className="px-4 py-2 rounded-lg bg-[#6A5294] text-white dark:bg-[#D4BBFF] dark:text-gray-900 disabled:opacity-50"
+              onClick={toggleSortOrder}
+              className="px-4 py-2 rounded-lg bg-[#6A5294] text-white dark:bg-[#D4BBFF] dark:text-gray-900"
             >
-              Next
+              Sort: {sortOrder === "asc" ? "Ascending" : "Descending"}
             </button>
           </div>
         </div>
+
+        {loading ? (
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#6A5294] dark:border-[#D4BBFF]"></div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {templates.map((template) => (
+              <Link 
+                key={template.id} 
+                href={`/t/${template.id}`} 
+                className="transition-transform hover:scale-105"
+              >
+                <TemplateCard template={template} />
+              </Link>
+            ))}
+          </div>
+        )}
+
+        <div className="flex justify-center gap-4 mt-6">
+          <button
+            onClick={() => handlePageChange(page - 1)}
+            disabled={page === 1}
+            className="px-4 py-2 rounded-lg bg-[#6A5294] text-white dark:bg-[#D4BBFF] dark:text-gray-900 disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <span className="py-2">
+            Page {page} of {totalPages}
+          </span>
+          <button
+            onClick={() => handlePageChange(page + 1)}
+            disabled={!hasMore}
+            className="px-4 py-2 rounded-lg bg-[#6A5294] text-white dark:bg-[#D4BBFF] dark:text-gray-900 disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 

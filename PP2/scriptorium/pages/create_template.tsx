@@ -19,21 +19,15 @@ const CodeEditorPage = () => {
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
-    document.documentElement.classList.toggle('dark');
+    // localStorage.setItem('theme', newTheme);
+    document.documentElement.setAttribute('data-theme', newTheme);
   };
 
-  // Initialize theme on component mount
+  // Simplified theme initialization
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
-    const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
-    
-    setTheme(initialTheme);
-    if (initialTheme === 'dark') {
-      document.documentElement.classList.add('dark');
-    }
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    setTheme(savedTheme);
+    document.documentElement.setAttribute('data-theme', savedTheme);
   }, []);
 
   const handleEditorChange = (value: string | undefined) => {
@@ -150,81 +144,88 @@ const CodeEditorPage = () => {
     }
   };
 
+  // Update the layout sections with responsive classes
   return ( 
-    <div className="min-h-screen bg-[#FEF7FF] dark:bg-[#3F384C] transition-colors duration-300">
-      <Navbar />
+    <div className="min-h-screen bg-[var(--background)] transition-colors duration-300">
+      {/* <Navbar /> */}
       <div className="flex flex-col h-screen">
-        <div className="flex flex-1">
-          <aside className="w-1/2 p-6 flex flex-col space-y-6 
-            bg-white dark:bg-[#2D2640] 
-            shadow-lg 
-            transition-colors duration-300">
-            <header>
-              <EditableTitle />
-            </header>
-            <section>
-              <div className="mb-4 flex flex-wrap items-center gap-2">
-                {tags.map(tag => (
-                  <span 
-                    key={tag} 
-                    className="inline-block px-4 py-1 rounded-full 
-                      bg-[#6A5294] dark:bg-[#D4BBFF] 
-                      text-white dark:text-[#3F384C] 
-                      font-bold text-sm"
-                  >
-                    {tag}
+        <div className="flex flex-col lg:flex-row flex-1 overflow-auto">
+          {/* Left Panel - Info Section */}
+          <aside className="w-full lg:w-1/2 p-4 lg:p-6 
+            bg-[var(--card-background)] shadow-lg transition-colors duration-300
+            lg:overflow-y-auto">
+            <div className="flex flex-col space-y-4 lg:space-y-6">
+              <header>
+                <EditableTitle />
+              </header>
+              <section>
+                {/* Tags section - same as before */}
+                <div className="mb-4 flex flex-wrap items-center gap-2">
+                  {tags.map(tag => (
+                    <span 
+                      key={tag} 
+                      className="inline-block px-4 py-1 rounded-full 
+                        bg-[var(--highlight)]
+                        text-[#6A5294] dark:text-[#D4BBFF]
+                        font-bold text-sm"
+                    >
+                      {tag}
+                      <button 
+                        onClick={() => removeTag(tag)} 
+                        className="ml-2 text-[#6A5294] dark:text-[#D4BBFF]
+                          opacity-50 hover:opacity-100 
+                          transition-opacity duration-200"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <line x1="18" y1="6" x2="6" y2="18"></line>
+                          <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                      </button>
+                    </span>
+                  ))}
+                  <div className="flex items-center">
+                    <input 
+                      type="text"
+                      value={newTag}
+                      onChange={(e) => setNewTag(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && addTag()}
+                      placeholder="Add tag"
+                      className="w-24 px-2 py-1 mr-2
+                        bg-[var(--input-background)] 
+                        text-[var(--text-primary)] 
+                        border border-[var(--border)] 
+                        rounded-lg text-sm"
+                    />
                     <button 
-                      onClick={() => removeTag(tag)} 
-                      className="ml-2 text-white dark:text-[#3F384C] 
+                      onClick={addTag} 
+                      className="text-[var(--text-primary)] 
                       opacity-50 hover:opacity-100 
                       transition-opacity duration-200"
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
                       </svg>
                     </button>
-                  </span>
-                ))}
-                <div className="flex items-center">
-                  <input 
-                    type="text"
-                    value={newTag}
-                    onChange={(e) => setNewTag(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && addTag()}
-                    placeholder="Add tag"
-                    className="w-24 px-2 py-1 mr-2
-                      bg-[#FEF7FF] dark:bg-[#3F384C] 
-                      text-[#6A5294] dark:text-[#D4BBFF] 
-                      border border-[#6A529433] dark:border-[#D4BBFF33] 
-                      rounded-lg text-sm"
-                  />
-                  <button 
-                    onClick={addTag} 
-                    className="text-[#6A5294] dark:text-[#D4BBFF] 
-                    opacity-50 hover:opacity-100 
-                    transition-opacity duration-200"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="12" y1="5" x2="12" y2="19"></line>
-                      <line x1="5" y1="12" x2="19" y2="12"></line>
-                    </svg>
-                  </button>
+                  </div>
                 </div>
-              </div>
-              <EditableDescription description={description} setDescription={setDescription} />
-            </section>
+                <EditableDescription description={description} setDescription={setDescription} />
+              </section>
+            </div>
           </aside>
-          <section className="w-1/2 p-6 
-            bg-white dark:bg-[#2D2640] 
-            shadow-lg 
-            transition-colors duration-300">
-            <div className="flex justify-end gap-2 mb-4">
+
+          {/* Right Panel - Editor Section */}
+          <section className="w-full lg:w-1/2 p-4 lg:p-6 
+            bg-[var--card-background] shadow-lg transition-colors duration-300
+            flex flex-col lg:min-h-0">
+            {/* Controls */}
+            <div className="flex flex-col sm:flex-row gap-2 mb-4 justify-between">
               <select
                 value={language}
                 onChange={(e) => setLanguage(e.target.value)}
-                className="px-1.5 py-0.5 text-sm rounded-md border border-[#6A529433] dark:border-[#D4BBFF33] 
-                  bg-[#FEF7FF] dark:bg-[#3F384C] text-[#6A5294] dark:text-[#D4BBFF]"
+                className="w-full sm:w-auto px-1.5 py-0.5 text-sm rounded-md 
+                  border border-[var(--border)] 
+                  bg-[var(--input-background)] text-[var(--text-primary)]"
               >
                 <option value="python">Python</option>
                 <option value="javascript">JavaScript</option>
@@ -234,36 +235,43 @@ const CodeEditorPage = () => {
                 <option value="cpp">C++</option>
                 <option value="golang">Golang</option>
               </select>
-              <button
-                onClick={createTemplate}
-                className="px-3 py-0.5 text-sm rounded-md bg-[#6A5294] dark:bg-[#D4BBFF] 
-                  text-white dark:text-[#3F384C] font-medium"
-              >
-                Save
-              </button>
-              <button
-                onClick={handleExecuteCode}
-                className="px-3 py-0.5 text-sm rounded-md bg-[#6A5294] dark:bg-[#D4BBFF] 
-                  text-white dark:text-[#3F384C] font-medium"
-              >
-                Run
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={createTemplate}
+                  className="flex-1 sm:flex-none px-3 py-0.5 text-sm rounded-md 
+                    bg-[var(--highlight)] text-[var(--highlight-text)] font-medium"
+                >
+                  Save
+                </button>
+                <button
+                  onClick={handleExecuteCode}
+                  className="flex-1 sm:flex-none px-3 py-0.5 text-sm rounded-md 
+                    bg-[var(--highlight)] text-[var(--highlight-text)] font-medium"
+                >
+                  Run
+                </button>
+              </div>
             </div>
-            <Editor
-              height="500px"
-              defaultLanguage="python"
-              value={code}
-              theme={theme === 'dark' ? 'vs-dark' : 'vs-light'}
-              onChange={handleEditorChange}
-              options={{
-                fontSize: 14,
-                minimap: { enabled: false },
-                scrollBeyondLastLine: false,
-              }}
-            />
-            {/* Add input section below editor */}
+
+            {/* Editor */}
+            <div className="flex-1 min-h-0 mb-2 lg"> {/* Added mb-6 */}
+              <Editor
+                height="calc(100vh - 300px)"
+                defaultLanguage="python"
+                value={code}
+                theme={theme === 'dark' ? 'vs-dark' : 'vs-light'}
+                onChange={handleEditorChange}
+                options={{
+                  fontSize: 14,
+                  minimap: { enabled: false },
+                  scrollBeyondLastLine: false,
+                }}
+              />
+            </div>
+
+            {/* Input */}
             <div className="mt-4">
-              <label className="block text-sm font-medium text-[#6A5294] dark:text-[#D4BBFF] mb-2">
+              <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
                 Program Input (stdin)
               </label>
               <textarea
@@ -271,21 +279,26 @@ const CodeEditorPage = () => {
                 onChange={(e) => setUserInput(e.target.value)}
                 placeholder="Enter your input here (one input per line)"
                 className="w-full px-3 py-2 rounded-lg
-                  bg-[#FEF7FF] dark:bg-[#3F384C] 
-                  text-[#6A5294] dark:text-[#D4BBFF] 
-                  border border-[#6A529433] dark:border-[#D4BBFF33]"
+                  bg-[var(--input-background)] 
+                  text-[var(--text-primary)] 
+                  border border-[var(--border)]"
                 rows={3}
               />
             </div>
           </section>
         </div>
         
-        {/* New output section at bottom */}
+        {/* Output */}
         {output && (
-          <div className="h-32 p-4 bg-white dark:bg-[#2D2640] border-t border-[#6A529433] dark:border-[#D4BBFF33]">
-            <div className="h-full overflow-auto rounded-lg bg-[#FEF7FF] dark:bg-[#3F384C] 
-              text-[#6A5294] dark:text-[#D4BBFF] border border-[#6A529433] dark:border-[#D4BBFF33] p-4">
-              <pre className="text-sm">{output}</pre>
+          <div className="h-24 lg:h-32 
+            bg-[var(--card-background)] border-t border-[var(--border)]">
+            <div className="h-full p-3 lg:p-4">
+              <div className="h-full overflow-auto rounded-lg 
+                bg-[var(--input-background)] 
+                text-[var(--text-primary)] 
+                border border-[var(--border)] p-3 lg:p-4">
+                <pre className="text-sm">{output}</pre>
+              </div>
             </div>
           </div>
         )}

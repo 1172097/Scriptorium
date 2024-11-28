@@ -26,14 +26,17 @@ const EditTemplatePage = () => {
   const [userInput, setUserInput] = useState('');
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
-    setTheme(initialTheme);
-    if (initialTheme === 'dark') {
-      document.documentElement.classList.add('dark');
-    }
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    setTheme(savedTheme);
+    document.documentElement.setAttribute('data-theme', savedTheme);
   }, []);
+
+  // const toggleTheme = () => {
+  //   const newTheme = theme === 'light' ? 'dark' : 'light';
+  //   setTheme(newTheme);
+  //   localStorage.setItem('theme', newTheme);
+  //   document.documentElement.setAttribute('data-theme', newTheme);
+  // };
 
   useEffect(() => {
     const fetchTemplate = async () => {
@@ -90,9 +93,9 @@ const EditTemplatePage = () => {
           onBlur={() => setIsEditingTitle(false)}
           onKeyDown={(e) => e.key === 'Enter' && setIsEditingTitle(false)}
           className="text-2xl font-bold w-full 
-            bg-[#FEF7FF] dark:bg-[#3F384C] 
-            text-[#6A5294] dark:text-[#D4BBFF] 
-            border border-[#6A529433] dark:border-[#D4BBFF33] 
+            bg-[var(--input-background)]
+            text-[var(--text-primary)]
+            border border-[var(--border)]
             rounded-lg px-2 py-1"
           autoFocus
         />
@@ -172,14 +175,13 @@ const EditTemplatePage = () => {
   };
 
   return ( 
-    <div className="min-h-screen bg-[#FEF7FF] dark:bg-[#3F384C] transition-colors duration-300">
-      <Navbar />
+    <div className="min-h-screen bg-[var(--background)] transition-colors duration-300">
+      {/* <Navbar /> */}
       <div className="flex flex-col h-screen">
-        <div className="flex flex-1">
-          <aside className="w-1/2 p-6 flex flex-col space-y-6 
-            bg-white dark:bg-[#2D2640] 
-            shadow-lg 
-            transition-colors duration-300">
+        <div className="flex flex-col lg:flex-row flex-1 overflow-auto">
+          <aside className="w-full lg:w-1/2 p-4 lg:p-6 
+            bg-[var(--card-background)] shadow-lg transition-colors duration-300
+            lg:overflow-y-auto">
             <header>
               <EditableTitle />
             </header>
@@ -189,8 +191,8 @@ const EditTemplatePage = () => {
                   <span 
                     key={tag} 
                     className="inline-block px-4 py-1 rounded-full 
-                      bg-[#6A5294] dark:bg-[#D4BBFF] 
-                      text-white dark:text-[#3F384C] 
+                      bg-[var(--highlight)]
+                      text-[var(--highlight-text)]
                       font-bold text-sm"
                   >
                     {tag}
@@ -215,9 +217,9 @@ const EditTemplatePage = () => {
                     onKeyDown={(e) => e.key === 'Enter' && addTag()}
                     placeholder="Add tag"
                     className="w-24 px-2 py-1 mr-2
-                      bg-[#FEF7FF] dark:bg-[#3F384C] 
-                      text-[#6A5294] dark:text-[#D4BBFF] 
-                      border border-[#6A529433] dark:border-[#D4BBFF33] 
+                      bg-[var(--input-background)]
+                      text-[var(--text-primary)]
+                      border border-[var(--border)]
                       rounded-lg text-sm"
                   />
                   <button 
@@ -236,16 +238,15 @@ const EditTemplatePage = () => {
               <EditableDescription description={description} setDescription={setDescription} />
             </section>
           </aside>
-          <section className="w-1/2 p-6 
-            bg-white dark:bg-[#2D2640] 
-            shadow-lg 
-            transition-colors duration-300">
-            <div className="flex justify-end gap-2 mb-4">
+          <section className="w-full lg:w-1/2 p-4 lg:p-6 
+            bg-[var(--card-background)] shadow-lg transition-colors duration-300
+            flex flex-col lg:min-h-0">
+            <div className="flex flex-col sm:flex-row gap-2 mb-4 justify-between">
               <select
                 value={language}
                 onChange={(e) => setLanguage(e.target.value)}
-                className="px-1.5 py-0.5 text-sm rounded-md border border-[#6A529433] dark:border-[#D4BBFF33] 
-                  bg-[#FEF7FF] dark:bg-[#3F384C] text-[#6A5294] dark:text-[#D4BBFF]"
+                className="w-full sm:w-auto px-1.5 py-0.5 text-sm rounded-md border border-[var(--border)]
+                  bg-[var(--input-background)] text-[var(--text-primary)]"
               >
                 <option value="python">Python</option>
                 <option value="javascript">JavaScript</option>
@@ -255,35 +256,41 @@ const EditTemplatePage = () => {
                 <option value="cpp">C++</option>
                 <option value="golang">Golang</option>
               </select>
-              <button
-                onClick={updateTemplate}
-                className="px-3 py-0.5 text-sm rounded-md bg-[#6A5294] dark:bg-[#D4BBFF] 
-                  text-white dark:text-[#3F384C] font-medium"
-              >
-                Save
-              </button>
-              <button
-                onClick={handleExecuteCode}
-                className="px-3 py-0.5 text-sm rounded-md bg-[#6A5294] dark:bg-[#D4BBFF] 
-                  text-white dark:text-[#3F384C] font-medium"
-              >
-                Run
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={updateTemplate}
+                  className="px-3 py-0.5 text-sm rounded-md bg-[var(--highlight)]
+                    text-[var(--highlight-text)] font-medium"
+                >
+                  Save
+                </button>
+                <button
+                  onClick={handleExecuteCode}
+                  className="px-3 py-0.5 text-sm rounded-md bg-[var(--highlight)]
+                    text-[var(--highlight-text)] font-medium"
+                >
+                  Run
+                </button>
+              </div>
             </div>
-            <Editor
-              height="500px"
-              defaultLanguage="python"
-              value={code}
-              theme={theme === 'dark' ? 'vs-dark' : 'vs-light'}
-              onChange={handleEditorChange}
-              options={{
-                fontSize: 14,
-                minimap: { enabled: false },
-                scrollBeyondLastLine: false,
-              }}
-            />
+
+            <div className="flex-1 min-h-0 mb-2">
+              <Editor
+                height="calc(100vh - 300px)"
+                defaultLanguage="python"
+                value={code}
+                theme={theme === 'dark' ? 'vs-dark' : 'vs-light'}
+                onChange={handleEditorChange}
+                options={{
+                  fontSize: 14,
+                  minimap: { enabled: false },
+                  scrollBeyondLastLine: false,
+                }}
+              />
+            </div>
+
             <div className="mt-4">
-              <label className="block text-sm font-medium text-[#6A5294] dark:text-[#D4BBFF] mb-2">
+              <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
                 Program Input (stdin)
               </label>
               <textarea
@@ -291,19 +298,25 @@ const EditTemplatePage = () => {
                 onChange={(e) => setUserInput(e.target.value)}
                 placeholder="Enter your input here (one input per line)"
                 className="w-full px-3 py-2 rounded-lg
-                  bg-[#FEF7FF] dark:bg-[#3F384C] 
-                  text-[#6A5294] dark:text-[#D4BBFF] 
-                  border border-[#6A529433] dark:border-[#D4BBFF33]"
+                  bg-[var(--input-background)]
+                  text-[var(--text-primary)]
+                  border border-[var(--border)]"
                 rows={3}
               />
             </div>
           </section>
         </div>
+        
         {output && (
-          <div className="h-32 p-4 bg-white dark:bg-[#2D2640] border-t border-[#6A529433] dark:border-[#D4BBFF33]">
-            <div className="h-full overflow-auto rounded-lg bg-[#FEF7FF] dark:bg-[#3F384C] 
-              text-[#6A5294] dark:text-[#D4BBFF] border border-[#6A529433] dark:border-[#D4BBFF33] p-4">
-              <pre className="text-sm">{output}</pre>
+          <div className="h-24 lg:h-32 
+            bg-[var(--card-background)] border-t border-[var(--border)]">
+            <div className="h-full p-3 lg:p-4">
+              <div className="h-full overflow-auto rounded-lg
+                bg-[var(--input-background)]
+                text-[var(--text-primary)]
+                border border-[var(--border)] p-4">
+                <pre className="text-sm">{output}</pre>
+              </div>
             </div>
           </div>
         )}

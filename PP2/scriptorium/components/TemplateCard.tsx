@@ -28,16 +28,16 @@ interface TemplateCardProps {
 const TemplateCard: React.FC<TemplateCardProps> = ({ template }) => {
   return (
     <div 
-      className="bg-white dark:bg-[#2D2640] rounded-2xl p-6 shadow-lg 
-                hover:shadow-xl transition-shadow duration-300"
+      className="cursor-pointer bg-[var(--card-background)] text-[var(--text-primary)] 
+                 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300"
     >
       <div className="flex items-center justify-between pb-2">
         <div className="flex items-center space-x-2">
-          <span className="text-xl font-semibold text-[#6A5294] dark:text-[#D4BBFF]">
+          <span className="text-xl font-semibold">
             {template.title}
           </span>
         </div>
-        <div className="flex items-center space-x-4 text-[#6A5294B3] dark:text-[#D4BBFFB3]">
+        <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-1">
             <span>⭐</span>
             <span className="text-sm">{template.stars || 0}</span>
@@ -50,20 +50,18 @@ const TemplateCard: React.FC<TemplateCardProps> = ({ template }) => {
       </div>
       
       <div className="mt-4">
-        <p className="text-[#6A5294B3] dark:text-[#D4BBFFB3] mb-4 truncate">
+        <p className="mb-4 truncate">
           {template.description}
         </p>
         
         <div className="flex flex-wrap gap-2">
-          <span className="px-3 py-1 text-sm rounded-lg bg-[#EBDCFF] dark:bg-[#513A7A] 
-                       text-[#6A5294] dark:text-[#D4BBFF]">
+          <span className="px-3 py-1 text-sm rounded-lg bg-[var(--highlight)] opacity-80">
             {template.language}
           </span>
           {template.tags?.map((tag) => (
             <span 
               key={tag.id} 
-              className="px-3 py-1 text-sm rounded-lg bg-[#EBDCFF] dark:bg-[#513A7A] 
-                       text-[#6A5294] dark:text-[#D4BBFF] opacity-80"
+              className="px-3 py-1 text-sm rounded-lg bg-[var(--highlight)] opacity-80"
             >
               {tag.name}
             </span>
@@ -76,7 +74,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({ template }) => {
             alt={template.author.username}
             className="h-8 w-8 rounded-full"
           />
-          <span className="text-sm text-[#6A5294B3] dark:text-[#D4BBFFB3]">
+          <span className="text-sm">
             by {template.author.username}
           </span>
         </div>

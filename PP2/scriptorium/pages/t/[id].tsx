@@ -36,11 +36,17 @@ const TemplateDetail = () => {
   const [editableCode, setEditableCode] = useState('');
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
-    setTheme(initialTheme);
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    setTheme(savedTheme);
+    document.documentElement.setAttribute('data-theme', savedTheme);
   }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
+    document.documentElement.setAttribute('data-theme', newTheme);
+  };
 
   useEffect(() => {
     const fetchTemplate = async () => {
@@ -125,18 +131,20 @@ const TemplateDetail = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#FEF7FF] dark:bg-[#3F384C] transition-colors duration-300">
+    <div className="min-h-screen bg-[var(--background-primary)] transition-colors duration-300">
       {/* <Navbar /> */}
       <div className="flex flex-col h-screen">
-        <div className="flex flex-1">
+        <div className="flex flex-col lg:flex-row flex-1 overflow-auto">
           {/* Left Panel */}
-          <aside className="w-1/2 p-6 flex flex-col space-y-6 bg-white dark:bg-[#2D2640] shadow-lg transition-colors duration-300">
+          <aside className="w-full lg:w-1/2 p-4 lg:p-6 
+            bg-[var(--card-background)] shadow-lg transition-colors duration-300 
+            lg:overflow-y-auto">
             <header className="flex justify-between items-start">
               <div>
-                <h1 className="text-2xl font-bold text-[#6A5294] dark:text-[#D4BBFF] mr-2">
+                <h1 className="text-2xl font-bold text-[var(--text-primary)] mr-2">
                   {template.title}
                 </h1>
-                <p className="text-sm text-[#6A5294] dark:text-[#D4BBFF] opacity-70">
+                <p className="text-sm text-[var(--text-secondary)] opacity-70">
                   by {template.author.username}
                 </p>
               </div>
@@ -166,52 +174,55 @@ const TemplateDetail = () => {
                 {template.tags.map(tag => (
                   <span 
                     key={tag.id} 
-                    className="inline-block px-4 py-1 rounded-full 
-                      bg-[#6A5294] dark:bg-[#D4BBFF] 
-                      text-white dark:text-[#3F384C] 
-                      font-bold text-sm"
+                    className="inline-block px-4 py-1 rounded-full bg-[var(--accent-color)] text-[var(--accent-text)] font-bold text-sm"
                   >
                     {tag.name}
                   </span>
                 ))}
               </div>
-              <p className="text-[#6A5294] dark:text-[#D4BBFF]">
+              <p className="text-[var(--text-primary)]">
                 {template.description}
               </p>
             </section>
           </aside>
 
           {/* Right Panel */}
-          <section className="w-1/2 p-6 bg-white dark:bg-[#2D2640] shadow-lg transition-colors duration-300">
-            <div className="flex justify-end gap-2 mb-4">
-              <div className="px-3 py-0.5 text-sm rounded-md border border-[#6A529433] dark:border-[#D4BBFF33] 
-                bg-[#FEF7FF] dark:bg-[#3F384C] text-[#6A5294] dark:text-[#D4BBFF]">
+          <section className="w-full lg:w-1/2 p-4 lg:p-6 
+            bg-[var(--card-background)] shadow-lg transition-colors duration-300
+            flex flex-col lg:min-h-0">
+            <div className="flex flex-col sm:flex-row gap-2 mb-4 justify-between">
+              <div className="px-3 py-0.5 text-sm rounded-md border border-[var(--border)] 
+                bg-[var(--input-background)] text-[var(--text-primary)]">
                 {template.language}
               </div>
               <button
                 onClick={handleExecuteCode}
-                className="px-3 py-0.5 text-sm rounded-md bg-[#6A5294] dark:bg-[#D4BBFF] 
-                  text-white dark:text-[#3F384C] font-medium"
+                className="px-3 py-0.5 text-sm rounded-md bg-[var(--highlight)] 
+                  text-[var(--highlight-text)] font-medium"
               >
                 Run
               </button>
             </div>
 
-            <Editor
-              height="500px"
-              defaultLanguage={template.language}
-              value={editableCode}
-              onChange={handleEditorChange}
-              theme={theme === 'dark' ? 'vs-dark' : 'vs-light'}
-              options={{
-                fontSize: 14,
-                minimap: { enabled: false },
-                scrollBeyondLastLine: false,
-              }}
-            />
+            {/* Editor */}
+            <div className="flex-1 min-h-0 mb-2">
+              <Editor
+                height="calc(100vh - 300px)"
+                defaultLanguage={template.language}
+                value={editableCode}
+                onChange={handleEditorChange}
+                theme={theme === 'dark' ? 'vs-dark' : 'vs-light'}
+                options={{
+                  fontSize: 14,
+                  minimap: { enabled: false },
+                  scrollBeyondLastLine: false,
+                }}
+              />
+            </div>
 
+            {/* Input */}
             <div className="mt-4">
-              <label className="block text-sm font-medium text-[#6A5294] dark:text-[#D4BBFF] mb-2">
+              <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
                 Program Input (stdin)
               </label>
               <textarea
@@ -219,9 +230,9 @@ const TemplateDetail = () => {
                 onChange={(e) => setUserInput(e.target.value)}
                 placeholder="Enter your input here (one input per line)"
                 className="w-full px-3 py-2 rounded-lg
-                  bg-[#FEF7FF] dark:bg-[#3F384C] 
-                  text-[#6A5294] dark:text-[#D4BBFF] 
-                  border border-[#6A529433] dark:border-[#D4BBFF33]"
+                  bg-[var(--input-background)]
+                  text-[var(--text-primary)]
+                  border border-[var(--border)]"
                 rows={3}
               />
             </div>
@@ -230,10 +241,15 @@ const TemplateDetail = () => {
         
         {/* Output Panel */}
         {output && (
-          <div className="h-32 p-4 bg-white dark:bg-[#2D2640] border-t border-[#6A529433] dark:border-[#D4BBFF33]">
-            <div className="h-full overflow-auto rounded-lg bg-[#FEF7FF] dark:bg-[#3F384C] 
-              text-[#6A5294] dark:text-[#D4BBFF] border border-[#6A529433] dark:border-[#D4BBFF33] p-4">
-              <pre className="text-sm">{output}</pre>
+          <div className="h-24 lg:h-32 
+            bg-[var(--card-background)] border-t border-[var(--border)]">
+            <div className="h-full p-3 lg:p-4">
+              <div className="h-full overflow-auto rounded-lg 
+                bg-[var(--input-background)]
+                text-[var(--text-primary)] 
+                border border-[var(--border)] p-4">
+                <pre className="text-sm">{output}</pre>
+              </div>
             </div>
           </div>
         )}
