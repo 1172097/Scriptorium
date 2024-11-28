@@ -6,7 +6,8 @@ import { attachUser } from "@/utils/middleware";
 async function handler(req, res) {
   const { method } = req;
   const { postId } = req.query; // Extract the ID from the query parameters
-  const userId = req.user ? req.user.id : null; // Extract the user ID from the request
+  const userId = req.user ? req.user.user_id : null; // Extract the user ID from the request
+  const sortBy = req.query.sortBy === 'asc' ? 'asc' : 'desc'; // Default to 'desc' if sortBy is invalid
   
 
   try {
@@ -30,15 +31,10 @@ async function handler(req, res) {
             },
           },
           comments: {
-            include: {
-              author: {
-                select: {
-                  profile_picture: true,
-                  username: true, // Only include the author's name
-                },
-              },
-            }
-          }
+            orderBy: { rating: sortBy },  
+            select: {id: true,}
+          }, 
+          ratings: true,
         },
       });
 

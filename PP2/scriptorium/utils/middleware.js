@@ -14,8 +14,8 @@ export function verifyUser(handler) {
                 req.user = user; // Attach user info to request
                 return handler(req, res); // Call the original handler
             } else {
-                // If token is invalid, respond with 403 Forbidden
-                return res.status(403).json({ message: 'Access denied' });
+                // If token is invalid, respond with 401 Unauthorized
+                return res.status(401).json({ message: 'Access denied' });
             }
         } catch (error) {
             console.error("Error verifying user:", error);
@@ -48,7 +48,7 @@ export function verifyAdmin(handler) {
 export function attachUser(handler) {
     return async function(req, res) {
         // Attempt to verify the token and retrieve the user
-        const user = verifyToken(req); // This will retrieve the user if the token is valid or return null if not
+        const user = await verifyToken(req); // This will retrieve the user if the token is valid or return null if not
 
         // Attach user to request
         req.user = user; // If token is valid, user will be the decoded token; otherwise, it will be null

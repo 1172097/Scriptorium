@@ -1,22 +1,28 @@
 import prisma from "@/utils/db";
-import { verifyUser } from "../../../../../utils/middleware";
+import { attachUser } from "@/utils/middleware";
 
 // This API handler was made with the assistance of ChatGPT.
 
 async function handler(req, res) {
   const { method } = req;
-  const commentId = Number(req.query.commentId); // Extract the comment ID from the query parameters
+  const { commentId } = req.query; // Extract the comment ID from the query parameters
   const sortBy = req.query.sortBy === 'asc' ? 'asc' : 'desc'; // Default to 'desc' if sortBy is invalid
-  const userId = req.user.user_id;
+  const userId = req.user ? req.user.user_id : null;
 
   const comment = await prisma.comment.findUnique({
-    where: { id: commentId },
+    where: { id: Number(commentId) },
     include: {
-      author: true,   // Include author details if needed
+      author: {
+        select: {
+          profile_picture: true,
+          username: true, 
+        },
+      },   // Include author details if needed
       ratings: true,  // Include ratings to check if the user has rated
       replies: {
-        orderBy: { rating: sortBy },    // Order replies by rating
-      },
+        orderBy: { rating: sortBy },  
+        select: {id: true,}
+      }, 
     },
   });
 
@@ -81,4 +87,4 @@ async function handler(req, res) {
   }
 }
 
-export default verifyUser(handler);
+export default attachUser(handler);

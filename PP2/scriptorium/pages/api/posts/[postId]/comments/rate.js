@@ -66,7 +66,7 @@ async function handler(req, res) {
       });
 
       if (existingRating) {
-        return res.status(409).json({ error: 'Rating already exists' });
+        return res.status(200).json({ message: 'Rating already exists' });
       }
 
       // Creating a new rating
@@ -95,7 +95,7 @@ async function handler(req, res) {
       return res.status(201).json({ message: 'Rating created successfully', rating });
 
     } else {
-      res.setHeader('Allow', ['POST', 'PATCH']);
+      res.setHeader('Allow', ['POST']);
       return res.status(405).json({ message: `Method ${method} Not Allowed` });
     }
   } catch (error) {
