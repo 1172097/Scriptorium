@@ -1,3 +1,4 @@
+// made with assistance from chatGPT
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { api } from "@/utils/api";
@@ -13,7 +14,7 @@ interface Comment {
   content: string;
   rating: number;
   created_at: string;
-  replies: number[]; // List of child comment IDs
+  replies: { id: number }[]; // Array of reply objects with only IDs
   author: {
     username: string;
     profile_picture?: string;
@@ -61,26 +62,33 @@ const PostDetail: React.FC = () => {
   const [replyPopup, setReplyPopup] = useState<number | null>(null);
   const [replyContent, setReplyContent] = useState<string>("");
 
-  const fetchComments = async (commentIds: number[]) => {
+  const fetchComment = async (commentId: number) => {
     try {
-      const fetchedComments = await Promise.all(
-        commentIds.map(async (commentId) => {
-          const response = await api.get(`/posts/${id}/comments/${commentId}`);
-          setUserRatings((prev) => ({
-            ...prev,
-            [commentId]: response.userRating?.value || null,
-          }));
-          return { [commentId]: response.comment };
-        })
-      );
+      const response = await api.get(`/posts/${id}/comments/${commentId}`);
+      const { comment, userRating } = response;
+
+      setUserRatings((prev) => ({
+        ...prev,
+        [commentId]: userRating?.value || null,
+      }));
 
       setComments((prev) => ({
         ...prev,
-        ...Object.assign({}, ...fetchedComments),
+        [comment.id]: comment,
       }));
+
+      // Recursively fetch replies
+      if (comment.replies.length > 0) {
+        const replyIds = comment.replies.map((reply: { id: number }) => reply.id);
+        await fetchComments(replyIds);
+      }
     } catch (err) {
-      console.error("Failed to fetch comments:", err);
+      console.error(`Failed to fetch comment ${commentId}:`, err);
     }
+  };
+
+  const fetchComments = async (commentIds: number[]) => {
+    await Promise.all(commentIds.map(fetchComment));
   };
 
   useEffect(() => {
@@ -102,7 +110,7 @@ const PostDetail: React.FC = () => {
         // Extract comment IDs from the response
         const commentIds = data.post.comments.map((comment: { id: number }) => comment.id);
 
-        // Fetch top-level comments
+        // Fetch all comments and their replies
         await fetchComments(commentIds);
       } catch (err) {
         console.error("Failed to fetch post:", err);
@@ -114,16 +122,6 @@ const PostDetail: React.FC = () => {
 
     fetchPost();
   }, [id]);
-
-  const fetchReplies = async (commentId: number) => {
-    if (!comments[commentId] || !comments[commentId].replies) return;
-
-    try {
-      await fetchComments(comments[commentId].replies);
-    } catch (err) {
-      console.error("Failed to fetch replies:", err);
-    }
-  };
 
   const handleVote = async (entityId: number, ratingValue: number) => {
     const isPost = entityId === -1;
@@ -160,7 +158,6 @@ const PostDetail: React.FC = () => {
           prev ? { ...prev, rating: prev.rating + adjustment } : null
         );
       } else {
-        // Ensure comments state is updated correctly
         setComments((prev) => ({
           ...prev,
           [entityId]: {
@@ -180,6 +177,15 @@ const PostDetail: React.FC = () => {
       return;
     }
 
+
+    const token = typeof window !== "undefined" ? sessionStorage.getItem("token") : null;
+    if (!token) {
+      setShowLoginPopup(true);
+      setReportPopup(null);
+      setReportReason("");
+      return;
+    }
+
     const { entityId, isPost } = reportPopup;
 
     try {
@@ -190,9 +196,9 @@ const PostDetail: React.FC = () => {
 
       await api.post(`/posts/${id}/comments/report`, body);
 
-      alert("Report submitted successfully.");
       setReportPopup(null);
       setReportReason("");
+      router.reload();
     } catch (err) {
       console.error("Failed to submit report:", err);
       alert("Failed to submit report. Please try again.");
@@ -205,10 +211,18 @@ const PostDetail: React.FC = () => {
       return;
     }
 
+    const token = typeof window !== "undefined" ? sessionStorage.getItem("token") : null;
+    if (!token) {
+      setShowLoginPopup(true);
+      setReplyPopup(null);
+      setReplyContent("");
+      return;
+    }
+
     try {
       const body = {
         content: replyContent,
-        parentId: replyPopup,
+        parentId: replyPopup === -1 ? null : replyPopup,
       };
 
       const response = await api.post(`/posts/${id}/comments/create`, body);
@@ -221,6 +235,7 @@ const PostDetail: React.FC = () => {
 
       setReplyPopup(null);
       setReplyContent("");
+      router.reload();
     } catch (err) {
       console.error("Failed to submit reply:", err);
       alert("Failed to submit reply. Please try again.");
@@ -263,7 +278,7 @@ const PostDetail: React.FC = () => {
                   ⬆
                 </span>
               </button>
-              <span className="text-md font-bold text-[var(--text-primary)]">{comment.rating}</span>
+              <span className="text-md font-bold text-[var(--text-primary)]">{Math.max(comment.rating, 0)}</span>
               <button
                 className="text-xl bg-transparent border-none p-0 cursor-pointer hover:bg-transparent"
                 onClick={() => handleVote(comment.id, -1)}
@@ -276,7 +291,9 @@ const PostDetail: React.FC = () => {
                   ⬇
                 </span>
               </button>
+
             </div>
+
 
             {/* Reply Button */}
             <button
@@ -297,19 +314,19 @@ const PostDetail: React.FC = () => {
                   Report
                 </span>
             </button>
+
+            {/* Delete */}
+            <button
+                className="text-sm bg-transparent border-none p-0 cursor-pointer hover:bg-transparent"
+                onClick={() => setReportPopup({ entityId: comment.id, isPost: false })}
+              >
+                <span className="hover:text-red-600 text-[var(--text-primary)]">
+                  Report
+                </span>
+            </button>
           </div>
 
-          {comment.replies.length > 0 && (
-            <div>
-              <button
-                onClick={() => fetchReplies(comment.id)}
-                className="text-sm text-blue-500 hover:underline"
-              >
-                Load Replies
-              </button>
-              <div>{renderComments(comment.replies)}</div>
-            </div>
-          )}
+          {comment.replies.length > 0 && renderComments(comment.replies.map((reply) => reply.id))}
         </div>
       );
     });
@@ -342,14 +359,14 @@ const PostDetail: React.FC = () => {
             ← Back
           </button>
         </div>
-
+  
         <div className="text-sm text-[var(--text-secondary)] mb-4">
           <span>by {post.author.username}</span>
           <span className="float-right">{formattedDate}</span>
         </div>
-
+  
         <p className="mb-6">{post.content}</p>
-
+  
         {post.tags && post.tags.length > 0 && (
           <div className="mb-6">
             <h2 className="text-lg font-semibold mb-2">Tags:</h2>
@@ -365,8 +382,25 @@ const PostDetail: React.FC = () => {
             </div>
           </div>
         )}
+  
+        {post.templates && post.templates.length > 0 && (
+          <div className="mb-6">
+            <h2 className="text-lg font-semibold mb-2">Templates:</h2>
+            <div className="flex flex-wrap gap-2">
+              {post.templates.map((template) => (
+                <a
+                  key={template.id}
+                  href={`/t/${template.id}`}
+                  className="px-3 py-1 text-sm rounded-lg bg-[var(--highlight)] opacity-80"
+                >
+                  {template.title}
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
 
-        <div className="flex items-center space-x-4">
+        <div className="mb-6 flex items-center space-x-4 flex-wrap">
           <div className="flex items-center space-x-2">
             <button
               className="text-xl bg-transparent border-none p-0 cursor-pointer hover:bg-transparent"
@@ -380,7 +414,7 @@ const PostDetail: React.FC = () => {
                 ⬆
               </span>
             </button>
-            <span className="text-md font-bold text-[var(--text-primary)]">{post.rating}</span>
+            <span className="text-md font-bold text-[var(--text-primary)]">{Math.max(post.rating, 0)}</span>
             <button
               className="text-xl bg-transparent border-none p-0 cursor-pointer hover:bg-transparent"
               onClick={() => handleVote(-1, -1)}
@@ -400,7 +434,7 @@ const PostDetail: React.FC = () => {
                 onClick={() => setReplyPopup(-1)}
               >
                 <span className="hover:text-green-600 text-[var(--text-primary)]" >
-                  Reply
+                  Comment
                 </span>
           </button>
 
@@ -416,6 +450,7 @@ const PostDetail: React.FC = () => {
           
         </div>
 
+  
         {post.comments && post.comments.length > 0 && (
           <div className="mb-6">
             <h2 className="text-lg font-semibold mb-2">Comments:</h2>

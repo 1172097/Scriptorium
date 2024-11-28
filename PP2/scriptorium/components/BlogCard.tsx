@@ -44,7 +44,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ post }) => {
     <Link href={`/p/${post.id}`} passHref>
       <div
         className="cursor-pointer bg-[var(--card-background)] text-[var(--text-primary)] 
-                   rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300"
+                   rounded-2xl p-6 shadow-lg transition-transform hover:scale-105 transition-shadow duration-300"
       >
         {/* Post Title */}
         <div className="flex items-center justify-between pb-2">
