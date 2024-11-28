@@ -9,6 +9,7 @@ const Navbar: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [profile, setProfile] = useState<{ username: string; profile_picture: string } | null>(
     null
   );
@@ -53,6 +54,7 @@ const Navbar: React.FC = () => {
             username: user.username,
             profile_picture: user.profile_picture || "/public/default_profile_pic.png",
           });
+          setIsAdmin(user.role === "ADMIN");
         })
         .catch((err) => {
           console.error("Failed to fetch profile", err);
@@ -62,7 +64,6 @@ const Navbar: React.FC = () => {
     // Listen for login success event
     const handleLoginSuccess = () => {
       setIsLoggedIn(isAuthenticated());
-      router.reload();
     };
 
     window.addEventListener("userLoggedIn", handleLoginSuccess);
@@ -70,11 +71,12 @@ const Navbar: React.FC = () => {
     return () => {
       window.removeEventListener("userLoggedIn", handleLoginSuccess);
     };
-  }, []);
+  }, [isLoggedIn]);
 
   const handleSignOut = () => {
     removeToken(); // Clear the token
     setIsLoggedIn(false); // Update state
+    setIsAdmin(false); // Update state
     closeMenu(); // Close the menu
     router.push("/login"); // Redirect to login page
   };
@@ -120,6 +122,14 @@ const Navbar: React.FC = () => {
                   About
                 </span>
               </Link>
+            {/* Reports Link for Admins */}
+            {isAdmin && (
+              <Link href="/admin/reports">
+                <span className="text-sm text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300">
+                  Reports
+                </span>
+              </Link>
+            )}
 
               <button
                 onClick={toggleDarkMode}
@@ -135,7 +145,7 @@ const Navbar: React.FC = () => {
                     <div className="flex items-center cursor-pointer">
                       <Image
                         src={profile.profile_picture}
-                        alt={`${profile.username}'s profile picture`}
+                        alt={""}
                         width={30}
                         height={30}
                         className="rounded-full"
@@ -182,6 +192,14 @@ const Navbar: React.FC = () => {
         {/* Mobile Menu */}
         {menuOpen && (
           <div className="fixed top-14 left-0 w-full bg-white dark:bg-gray-900 shadow-md backdrop-blur-sm p-4 shadow-lg md:hidden border-b border-gray-200 dark:border-gray-800">
+            {/* Reports Link for Admins */}
+            {isAdmin && (
+                <Link href="/admin/reports" onClick={closeMenu}>
+                  <div className="block mb-2 text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300">
+                    Reports
+                  </div>
+                </Link>
+              )}
             <Link href="/t" onClick={closeMenu}>
               <div className="block mb-2 text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300">
                 Templates

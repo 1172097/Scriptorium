@@ -83,5 +83,7 @@ export const api = {
     fetchWrapper(endpoint, { method: "POST", body: JSON.stringify(body) }),
   put: (endpoint: string, body: any) =>
     fetchWrapper(endpoint, { method: "PUT", body: JSON.stringify(body) }),
+  patch: (endpoint: string, body: any) =>
+    fetchWrapper(endpoint, { method: "PATCH", body: JSON.stringify(body) }),
   delete: (endpoint: string) => fetchWrapper(endpoint, { method: "DELETE" }),
 };

@@ -1,7 +1,6 @@
 import prisma from "@/utils/db";
-import { verifyAdmin } from "../../../../utils/middleware";
-import { comment } from "postcss";
-import { report } from "process";
+import { verifyAdmin } from "@/utils/middleware";
+
 
 // This API handler was made with the assistance of ChatGPT.
 
