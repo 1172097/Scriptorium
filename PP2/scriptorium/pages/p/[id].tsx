@@ -62,6 +62,8 @@ const PostDetail: React.FC = () => {
   const [replyPopup, setReplyPopup] = useState<number | null>(null);
   const [replyContent, setReplyContent] = useState<string>("");
 
+  const [sortOrder, setSortOrder] = useState<"decs" | "asc">("decs");
+
   const fetchComment = async (commentId: number) => {
     try {
       const response = await api.get(`/posts/${id}/comments/${commentId}`);
@@ -91,6 +93,10 @@ const PostDetail: React.FC = () => {
     await Promise.all(commentIds.map(fetchComment));
   };
 
+  const toggleSortOrder = () => {
+    setSortOrder((prev) => (prev === "decs" ? "asc" : "decs"));
+  };
+
   useEffect(() => {
     const fetchPost = async () => {
       if (!id) return;
@@ -98,7 +104,7 @@ const PostDetail: React.FC = () => {
       setError(null);
 
       try {
-        const data = await api.get(`/posts/${id}`);
+        const data = await api.get(`/posts/${id}?sortBy=${sortOrder}`);
         setPost(data.post);
 
         // Initialize user ratings for the post
@@ -121,7 +127,7 @@ const PostDetail: React.FC = () => {
     };
 
     fetchPost();
-  }, [id]);
+  }, [id, sortOrder]);
 
   const handleVote = async (entityId: number, ratingValue: number) => {
     const isPost = entityId === -1;
@@ -314,16 +320,6 @@ const PostDetail: React.FC = () => {
                   Report
                 </span>
             </button>
-
-            {/* Delete */}
-            <button
-                className="text-sm bg-transparent border-none p-0 cursor-pointer hover:bg-transparent"
-                onClick={() => setReportPopup({ entityId: comment.id, isPost: false })}
-              >
-                <span className="hover:text-red-600 text-[var(--text-primary)]">
-                  Report
-                </span>
-            </button>
           </div>
 
           {comment.replies.length > 0 && renderComments(comment.replies.map((reply) => reply.id))}
@@ -450,10 +446,18 @@ const PostDetail: React.FC = () => {
           
         </div>
 
+        <span className="text-sm text-[var(--text-primary)]"> Sort By:</span>
+        <button
+            className="text-sm bg-transparent border-none p-1 pl-2 pr-2 rounded-full"
+            onClick={toggleSortOrder}
+          >
+            <span className="text-[var(--text-primary)]">
+            {sortOrder === "asc" ? "Worst" : "Best"}
+            </span>
+        </button>
   
         {post.comments && post.comments.length > 0 && (
           <div className="mb-6">
-            <h2 className="text-lg font-semibold mb-2">Comments:</h2>
             {renderComments(post.comments.map((comment) => comment.id))}
           </div>
         )}
