@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import TemplateCard from '@/components/TemplateCard';
 import NavBar from '@/components/NavBar';
+import Link from 'next/link';
 
 interface Tag {
   id: string;
@@ -168,11 +169,20 @@ const CodeTemplateList: React.FC = () => {
     <>
       <NavBar />
       <div className="min-h-screen pt-20 p-6 bg-[#FEF7FF] dark:bg-[#3F384C]">
-      {/* <div className="min-h-screen p-6 bg-[#FEF7FF] dark:bg-[#3F384C]"> */}
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-3xl font-bold mb-8 text-[#6A5294] dark:text-[#D4BBFF]">
-            Code Templates
-          </h1>
+          <div className="flex items-center justify-between mb-8">
+            <h1 className="text-3xl font-bold text-[#6A5294] dark:text-[#D4BBFF]">
+              Code Templates
+            </h1>
+            <Link href="/create_template" 
+                  className="text-[#6A5294] dark:text-[#D4BBFF] hover:opacity-80 transition-opacity">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" 
+                   stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </Link>
+          </div>
           
           {loading ? (
             <div className="flex justify-center items-center h-64">

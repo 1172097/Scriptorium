@@ -3,22 +3,12 @@ import Editor from "@monaco-editor/react";
 import Navbar from "@/components/NavBar";
 
 const CodeEditorPage = () => {
-  const [code, setCode] = useState(`class Solution:
-  def isIsomorphic(self, s: str, t: str) -> bool:
-    d1, d2 = {}, {}
-    for i in range(len(s)):
-      if s[i] not in d1:
-        d1[s[i]] = i
-      if t[i] not in d2:
-        d2[t[i]] = i
-      if d1[s[i]] != d2[t[i]]:
-        return False
-    return True`);
+  const [code, setCode] = useState(``);
 
   const [theme, setTheme] = useState('light');
-  const [title, setTitle] = useState('Isomorphic Strings');
-  const [description, setDescription] = useState('Given two strings and determine if they are isomorphic.');
-  const [tags, setTags] = useState(['String', 'Hash Table']);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [tags, setTags] = useState(['']);
   const [newTag, setNewTag] = useState('');
 
   // Edit state
@@ -137,13 +127,71 @@ const CodeEditorPage = () => {
     </div>
   );
 
-  return ( 
-    
-    <div className="min-h-screen bg-[#FEF7FF] dark:bg-[#3F384C] transition-colors duration-300">
-            <Navbar />
+  const [language, setLanguage] = useState('python');
+  const [output, setOutput] = useState('');
+  const [userInput, setUserInput] = useState(''); // Add this new state
 
-      <div className="flex flex-col">
-        <div className="flex">
+  const handleExecuteCode = async () => {
+    try {
+      const response = await fetch('/api/code/execute', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          code,
+          language,
+          input: userInput // Modified to include user input
+        }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setOutput(data.output);
+      } else {
+        setOutput(data.error || 'Error executing code');
+      }
+    } catch (error) {
+      setOutput('Error executing code');
+    }
+  };
+
+  const createTemplate = async () => {
+    try {
+      const token = sessionStorage.getItem('token');
+      const response = await fetch('/api/templates/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          title,
+          description,
+          content: code,
+          language,
+          tags: tags.filter(tag => tag.trim() !== ''),
+          isForked: false
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create template');
+      }
+
+      const data = await response.json();
+      // You can add success notification or redirect here
+      alert('Template created successfully!');
+    } catch (error) {
+      console.error('Error creating template:', error);
+      alert('Failed to create template');
+    }
+  };
+
+  return ( 
+    <div className="min-h-screen bg-[#FEF7FF] dark:bg-[#3F384C] transition-colors duration-300">
+      <Navbar />
+      <div className="flex flex-col h-screen">
+        <div className="flex flex-1">
           <aside className="w-1/2 p-6 flex flex-col space-y-6 
             bg-white dark:bg-[#2D2640] 
             shadow-lg 
@@ -208,6 +256,36 @@ const CodeEditorPage = () => {
             bg-white dark:bg-[#2D2640] 
             shadow-lg 
             transition-colors duration-300">
+            <div className="flex justify-end gap-2 mb-4">
+              <select
+                value={language}
+                onChange={(e) => setLanguage(e.target.value)}
+                className="px-1.5 py-0.5 text-sm rounded-md border border-[#6A529433] dark:border-[#D4BBFF33] 
+                  bg-[#FEF7FF] dark:bg-[#3F384C] text-[#6A5294] dark:text-[#D4BBFF]"
+              >
+                <option value="python">Python</option>
+                <option value="javascript">JavaScript</option>
+                <option value="java">Java</option>
+                <option value="ruby">Ruby</option>
+                <option value="rust">Rust</option>
+                <option value="cpp">C++</option>
+                <option value="golang">Golang</option>
+              </select>
+              <button
+                onClick={createTemplate}
+                className="px-3 py-0.5 text-sm rounded-md bg-[#6A5294] dark:bg-[#D4BBFF] 
+                  text-white dark:text-[#3F384C] font-medium"
+              >
+                Save
+              </button>
+              <button
+                onClick={handleExecuteCode}
+                className="px-3 py-0.5 text-sm rounded-md bg-[#6A5294] dark:bg-[#D4BBFF] 
+                  text-white dark:text-[#3F384C] font-medium"
+              >
+                Run
+              </button>
+            </div>
             <Editor
               height="500px"
               defaultLanguage="python"
@@ -220,8 +298,34 @@ const CodeEditorPage = () => {
                 scrollBeyondLastLine: false,
               }}
             />
+            {/* Add input section below editor */}
+            <div className="mt-4">
+              <label className="block text-sm font-medium text-[#6A5294] dark:text-[#D4BBFF] mb-2">
+                Program Input (stdin)
+              </label>
+              <textarea
+                value={userInput}
+                onChange={(e) => setUserInput(e.target.value)}
+                placeholder="Enter your input here (one input per line)"
+                className="w-full px-3 py-2 rounded-lg
+                  bg-[#FEF7FF] dark:bg-[#3F384C] 
+                  text-[#6A5294] dark:text-[#D4BBFF] 
+                  border border-[#6A529433] dark:border-[#D4BBFF33]"
+                rows={3}
+              />
+            </div>
           </section>
         </div>
+        
+        {/* New output section at bottom */}
+        {output && (
+          <div className="h-32 p-4 bg-white dark:bg-[#2D2640] border-t border-[#6A529433] dark:border-[#D4BBFF33]">
+            <div className="h-full overflow-auto rounded-lg bg-[#FEF7FF] dark:bg-[#3F384C] 
+              text-[#6A5294] dark:text-[#D4BBFF] border border-[#6A529433] dark:border-[#D4BBFF33] p-4">
+              <pre className="text-sm">{output}</pre>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
