@@ -1,46 +1,77 @@
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import Editor from "@monaco-editor/react";
 import Navbar from "@/components/NavBar";
 import EditableDescription from "@/components/TemplateEditor";
 
-const CodeEditorPage = () => {
-  const [code, setCode] = useState(``);
+interface Tag {
+  id: number;
+  name: string;
+}
 
+const ForkTemplatePage = () => {
+  const router = useRouter();
+  const { id } = router.query;
+
+  const [code, setCode] = useState(``);
   const [theme, setTheme] = useState('light');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [tags, setTags] = useState(['']);
+  const [tags, setTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState('');
-
-  // Edit state
+  const [language, setLanguage] = useState('python');
+  const [output, setOutput] = useState('');
+  const [userInput, setUserInput] = useState('');
+  const [originalTemplateId, setOriginalTemplateId] = useState<string | null>(null);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
 
-  // Theme toggle function
-  const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
-    document.documentElement.classList.toggle('dark');
-  };
-
-  // Initialize theme on component mount
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
     const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
-    
     setTheme(initialTheme);
     if (initialTheme === 'dark') {
       document.documentElement.classList.add('dark');
     }
   }, []);
 
+  useEffect(() => {
+    const fetchTemplate = async () => {
+      if (!id) return;
+      
+      try {
+        const response = await fetch(`/api/templates/view?id=${id}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch template');
+        }
+        
+        const data = await response.json();
+        
+        // Set all the template data for forking
+        setTitle(`Fork of ${data.title}`);
+        setDescription(data.description || '');
+        setCode(data.content || '');
+        setLanguage(data.language || 'python');
+        
+        // Safely handle tags array
+        const templateTags = data.tags?.map((tag: Tag) => tag.name) || [];
+        setTags(templateTags);
+        
+        // Store the original template ID for forking
+        setOriginalTemplateId(data.id);
+      } catch (error) {
+        console.error('Error fetching template:', error);
+        alert('Failed to load template');
+      }
+    };
+
+    fetchTemplate();
+  }, [id]);
+
   const handleEditorChange = (value: string | undefined) => {
     setCode(value || "");
   };
 
-  // Tag management
   const addTag = () => {
     if (newTag.trim() && !tags.includes(newTag.trim())) {
       setTags([...tags, newTag.trim()]);
@@ -52,47 +83,39 @@ const CodeEditorPage = () => {
     setTags(tags.filter(tag => tag !== tagToRemove));
   };
 
-  // Inline editing components
-  const EditableTitle = () => (
-    <div className="flex items-center">
-      {isEditingTitle ? (
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          onBlur={() => setIsEditingTitle(false)}
-          onKeyDown={(e) => e.key === 'Enter' && setIsEditingTitle(false)}
-          className="text-2xl font-bold w-full 
-            bg-[#FEF7FF] dark:bg-[#3F384C] 
-            text-[#6A5294] dark:text-[#D4BBFF] 
-            border border-[#6A529433] dark:border-[#D4BBFF33] 
-            rounded-lg px-2 py-1"
-          autoFocus
-        />
-      ) : (
-        <>
-          <h1 className="text-2xl font-bold text-[#6A5294] dark:text-[#D4BBFF] mr-2">
-            {title}
-          </h1>
-          <button 
-            onClick={() => setIsEditingTitle(true)} 
-            className="text-[#6A5294] dark:text-[#D4BBFF] 
-            opacity-50 hover:opacity-100 
-            transition-opacity duration-200"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
-              <path d="m15 5 4 4"/>
-            </svg>
-          </button>
-        </>
-      )}
-    </div>
-  );
+  const forkTemplate = async () => {
+    try {
+      const token = sessionStorage.getItem('token');
+      const response = await fetch('/api/templates/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          isForked: true,
+          title,
+          description,
+          content: code,
+          language,
+          originTemplateId: originalTemplateId,
+          tags: tags.filter(tag => tag.trim() !== '')
+        }),
+      });
 
-  const [language, setLanguage] = useState('python');
-  const [output, setOutput] = useState('');
-  const [userInput, setUserInput] = useState(''); // Add this new state
+      if (!response.ok) {
+        throw new Error('Failed to fork template');
+      }
+
+      const data = await response.json();
+      alert('Template forked successfully!');
+      // Redirect to home page instead of template view
+      router.push('/');
+    } catch (error) {
+      console.error('Error forking template:', error);
+      alert('Failed to fork template');
+    }
+  };
 
   const handleExecuteCode = async () => {
     try {
@@ -104,7 +127,7 @@ const CodeEditorPage = () => {
         body: JSON.stringify({
           code,
           language,
-          input: userInput // Modified to include user input
+          input: userInput
         }),
       });
       const data = await response.json();
@@ -118,38 +141,6 @@ const CodeEditorPage = () => {
     }
   };
 
-  const createTemplate = async () => {
-    try {
-      const token = sessionStorage.getItem('token');
-      const response = await fetch('/api/templates/create', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          title,
-          description,
-          content: code,
-          language,
-          tags: tags.filter(tag => tag.trim() !== ''),
-          isForked: false
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to create template');
-      }
-
-      const data = await response.json();
-      // You can add success notification or redirect here
-      alert('Template created successfully!');
-    } catch (error) {
-      console.error('Error creating template:', error);
-      alert('Failed to create template');
-    }
-  };
-
   return ( 
     <div className="min-h-screen bg-[#FEF7FF] dark:bg-[#3F384C] transition-colors duration-300">
       <Navbar />
@@ -160,7 +151,40 @@ const CodeEditorPage = () => {
             shadow-lg 
             transition-colors duration-300">
             <header>
-              <EditableTitle />
+              <div className="flex items-center">
+                {isEditingTitle ? (
+                  <input
+                    type="text"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    onBlur={() => setIsEditingTitle(false)}
+                    onKeyDown={(e) => e.key === 'Enter' && setIsEditingTitle(false)}
+                    className="text-2xl font-bold w-full 
+                      bg-[#FEF7FF] dark:bg-[#3F384C] 
+                      text-[#6A5294] dark:text-[#D4BBFF] 
+                      border border-[#6A529433] dark:border-[#D4BBFF33] 
+                      rounded-lg px-2 py-1"
+                    autoFocus
+                  />
+                ) : (
+                  <>
+                    <h1 className="text-2xl font-bold text-[#6A5294] dark:text-[#D4BBFF] mr-2">
+                      {title}
+                    </h1>
+                    <button 
+                      onClick={() => setIsEditingTitle(true)} 
+                      className="text-[#6A5294] dark:text-[#D4BBFF] 
+                      opacity-50 hover:opacity-100 
+                      transition-opacity duration-200"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+                        <path d="m15 5 4 4"/>
+                      </svg>
+                    </button>
+                  </>
+                )}
+              </div>
             </header>
             <section>
               <div className="mb-4 flex flex-wrap items-center gap-2">
@@ -235,11 +259,11 @@ const CodeEditorPage = () => {
                 <option value="golang">Golang</option>
               </select>
               <button
-                onClick={createTemplate}
+                onClick={forkTemplate}
                 className="px-3 py-0.5 text-sm rounded-md bg-[#6A5294] dark:bg-[#D4BBFF] 
                   text-white dark:text-[#3F384C] font-medium"
               >
-                Save
+                Fork
               </button>
               <button
                 onClick={handleExecuteCode}
@@ -261,7 +285,6 @@ const CodeEditorPage = () => {
                 scrollBeyondLastLine: false,
               }}
             />
-            {/* Add input section below editor */}
             <div className="mt-4">
               <label className="block text-sm font-medium text-[#6A5294] dark:text-[#D4BBFF] mb-2">
                 Program Input (stdin)
@@ -279,8 +302,6 @@ const CodeEditorPage = () => {
             </div>
           </section>
         </div>
-        
-        {/* New output section at bottom */}
         {output && (
           <div className="h-32 p-4 bg-white dark:bg-[#2D2640] border-t border-[#6A529433] dark:border-[#D4BBFF33]">
             <div className="h-full overflow-auto rounded-lg bg-[#FEF7FF] dark:bg-[#3F384C] 
@@ -294,4 +315,4 @@ const CodeEditorPage = () => {
   );
 };
 
-export default CodeEditorPage;
+export default ForkTemplatePage;

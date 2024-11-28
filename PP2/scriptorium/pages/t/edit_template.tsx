@@ -1,46 +1,74 @@
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import Editor from "@monaco-editor/react";
 import Navbar from "@/components/NavBar";
 import EditableDescription from "@/components/TemplateEditor";
 
-const CodeEditorPage = () => {
-  const [code, setCode] = useState(``);
+interface Tag {
+  id: number;
+  name: string;
+}
 
+const EditTemplatePage = () => {
+  const router = useRouter();
+  const { id } = router.query;
+
+  const [code, setCode] = useState(``);
   const [theme, setTheme] = useState('light');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [tags, setTags] = useState(['']);
+  const [tags, setTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState('');
-
-  // Edit state
   const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [isEditingDescription, setIsEditingDescription] = useState(false);
+  const [language, setLanguage] = useState('python');
+  const [output, setOutput] = useState('');
+  const [userInput, setUserInput] = useState('');
 
-  // Theme toggle function
-  const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
-    document.documentElement.classList.toggle('dark');
-  };
-
-  // Initialize theme on component mount
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
     const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
-    
     setTheme(initialTheme);
     if (initialTheme === 'dark') {
       document.documentElement.classList.add('dark');
     }
   }, []);
 
+  useEffect(() => {
+    const fetchTemplate = async () => {
+      if (!id) return;
+      
+      try {
+        const response = await fetch(`/api/templates/view?id=${id}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch template');
+        }
+        
+        const data = await response.json();
+        
+        // Set all the template data
+        setTitle(data.title || '');
+        setDescription(data.description || '');
+        setCode(data.content || '');
+        setLanguage(data.language || 'python');
+        // Safely handle tags array
+        const templateTags = data.tags?.map((tag: Tag) => tag.name) || [];
+        setTags(templateTags);
+      } catch (error) {
+        console.error('Error fetching template:', error);
+        // Optionally show error to user
+        alert('Failed to load template');
+      }
+    };
+
+    fetchTemplate();
+  }, [id]);
+
   const handleEditorChange = (value: string | undefined) => {
     setCode(value || "");
   };
 
-  // Tag management
   const addTag = () => {
     if (newTag.trim() && !tags.includes(newTag.trim())) {
       setTags([...tags, newTag.trim()]);
@@ -52,7 +80,6 @@ const CodeEditorPage = () => {
     setTags(tags.filter(tag => tag !== tagToRemove));
   };
 
-  // Inline editing components
   const EditableTitle = () => (
     <div className="flex items-center">
       {isEditingTitle ? (
@@ -90,10 +117,6 @@ const CodeEditorPage = () => {
     </div>
   );
 
-  const [language, setLanguage] = useState('python');
-  const [output, setOutput] = useState('');
-  const [userInput, setUserInput] = useState(''); // Add this new state
-
   const handleExecuteCode = async () => {
     try {
       const response = await fetch('/api/code/execute', {
@@ -104,7 +127,7 @@ const CodeEditorPage = () => {
         body: JSON.stringify({
           code,
           language,
-          input: userInput // Modified to include user input
+          input: userInput
         }),
       });
       const data = await response.json();
@@ -118,11 +141,11 @@ const CodeEditorPage = () => {
     }
   };
 
-  const createTemplate = async () => {
+  const updateTemplate = async () => {
     try {
       const token = sessionStorage.getItem('token');
-      const response = await fetch('/api/templates/create', {
-        method: 'POST',
+      const response = await fetch(`/api/templates/${id}`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
@@ -132,21 +155,19 @@ const CodeEditorPage = () => {
           description,
           content: code,
           language,
-          tags: tags.filter(tag => tag.trim() !== ''),
-          isForked: false
+          tags: tags.filter(tag => tag.trim() !== '')
         }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to create template');
+        throw new Error('Failed to update template');
       }
 
       const data = await response.json();
-      // You can add success notification or redirect here
-      alert('Template created successfully!');
+      alert('Template updated successfully!');
     } catch (error) {
-      console.error('Error creating template:', error);
-      alert('Failed to create template');
+      console.error('Error updating template:', error);
+      alert('Failed to update template');
     }
   };
 
@@ -235,7 +256,7 @@ const CodeEditorPage = () => {
                 <option value="golang">Golang</option>
               </select>
               <button
-                onClick={createTemplate}
+                onClick={updateTemplate}
                 className="px-3 py-0.5 text-sm rounded-md bg-[#6A5294] dark:bg-[#D4BBFF] 
                   text-white dark:text-[#3F384C] font-medium"
               >
@@ -261,7 +282,6 @@ const CodeEditorPage = () => {
                 scrollBeyondLastLine: false,
               }}
             />
-            {/* Add input section below editor */}
             <div className="mt-4">
               <label className="block text-sm font-medium text-[#6A5294] dark:text-[#D4BBFF] mb-2">
                 Program Input (stdin)
@@ -279,8 +299,6 @@ const CodeEditorPage = () => {
             </div>
           </section>
         </div>
-        
-        {/* New output section at bottom */}
         {output && (
           <div className="h-32 p-4 bg-white dark:bg-[#2D2640] border-t border-[#6A529433] dark:border-[#D4BBFF33]">
             <div className="h-full overflow-auto rounded-lg bg-[#FEF7FF] dark:bg-[#3F384C] 
@@ -294,4 +312,4 @@ const CodeEditorPage = () => {
   );
 };
 
-export default CodeEditorPage;
+export default EditTemplatePage;

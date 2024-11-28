@@ -50,7 +50,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({ template }) => {
       </div>
       
       <div className="mt-4">
-        <p className="text-[#6A5294B3] dark:text-[#D4BBFFB3] mb-4">
+        <p className="text-[#6A5294B3] dark:text-[#D4BBFFB3] mb-4 truncate">
           {template.description}
         </p>
         

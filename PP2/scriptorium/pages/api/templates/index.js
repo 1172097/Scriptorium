@@ -14,7 +14,7 @@ export default async function handler(req, res) {
       page = 1,        // Current page number
       limit = 10,      // Items per page
       sortBy = 'title', // Sort field
-      order = 'asc'    // Sort order
+      order = 'asc'    // Can be 'asc' or 'desc'
     } = req.query;
 
     // Convert page and limit to numbers
@@ -47,12 +47,14 @@ export default async function handler(req, res) {
 
     // Add tags search if tags parameter exists
     if (tags) {
-      const tagArray = tags.split(',').map(tag => tag.trim());
+      const tagIds = tags.split(',')
+        .filter(id => id.trim())  // Remove any empty strings
+        .map(Number);
       whereClause.AND.push({
         tags: {
           some: {
-            name: {
-              in: tagArray
+            id: {
+              in: tagIds
             }
           }
         }
@@ -82,7 +84,7 @@ export default async function handler(req, res) {
           }
         },
         orderBy: {
-          [sortBy]: order.toLowerCase()
+          [sortBy]: order.toLowerCase() === 'desc' ? 'desc' : 'asc'
         },
         skip,
         take: limitNum
