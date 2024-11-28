@@ -8,8 +8,45 @@ import { verifyUser } from '../../../utils/middleware';
 const prisma = new PrismaClient();
 
 async function handler(req, res) {
-  if (req.method !== 'PUT') {
+  if (req.method !== 'PUT' && req.method !== 'GET') {
     return res.status(405).json({ message: 'Method not allowed' });
+  }
+  if (req.method === 'GET') {
+    const user_id = req.user.user_id;
+    if (!user_id) {
+      return res.status(400).json({ message: 'User ID not provided' });
+    }
+
+    try {
+      const user = await prisma.user.findUnique({
+        where: { user_id: user_id },
+        select: {
+          user_id: true,
+          username: true,
+          email: true,
+          first_name: true,
+          last_name: true,
+          profile_picture: true,
+          phone: true,
+          created_at: true,
+          updated_at: true,
+          code_templates: true,
+          blog_posts: true,
+        },
+      });
+
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      return res.status(200).json({ user });
+
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'Internal server error' });
+    } finally {
+      await prisma.$disconnect();
+    }
   }
 
   // const { user, email, firstName, lastName, profilePicture, phone, darkMode, new_username } = req.body;

@@ -80,8 +80,7 @@ const PostDetail: React.FC = () => {
       <div key={comment.id} className="pl-4 border-l border-gray-300 dark:border-gray-700 mb-4">
         <div className="flex items-center mb-2">
           <img
-            // src={comment.author.profile_picture || "/incognito.png"}
-            src={"/incognito.png"}
+            src={comment.author.profile_picture || "/incognito.png"}
             alt={comment.author.username}
             className="h-8 w-8 rounded-full mr-2"
           />

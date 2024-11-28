@@ -10,6 +10,49 @@ async function handler(req, res) {
 
   try {
     if (method === 'POST') {
+      if (ratingValue === 0) {
+        try {
+          const ratings = await prisma.rating.findMany({
+            where: {
+              ownerId: userId,
+              postId: commentId ? null : Number(postId),
+              commentId: commentId ? Number(commentId) : null,
+            },
+          });
+          if (ratings.length == 0) {
+            return res.status(404).json({ error: 'Rating not found' });
+          }
+  
+          const rating = await prisma.rating.delete({
+            where: {
+              [commentId ? 'ownerId_commentId' : 'ownerId_postId']: {
+                ownerId: userId,
+                ...(commentId ? { commentId: Number(commentId) } : { postId: Number(postId) }),
+              },
+            },
+          });
+          console.log(rating);
+          // Decrement the corresponding post or comment rating
+          const decrementData = { rating: { decrement: rating.value } };
+          if (commentId) {
+            await prisma.comment.update({
+              where: { id: Number(commentId) },
+              data: decrementData,
+            });
+          } else {
+            await prisma.blogPost.update({
+              where: { id: Number(postId) },
+              data: decrementData,
+            });
+          }
+          return res.status(200).json({ message: 'Rating deleted successfully' });
+        } catch (error) {
+          if (error.code === 'P2025') { // Record not found
+            return res.status(404).json({ error: 'Rating not found' });
+          }
+          throw error; // Re-throw other unexpected errors
+        }
+      }
       // Validate rating value
       if (![1, -1].includes(ratingValue)) {
         return res.status(400).json({ error: 'Rating value must be +1 or -1' });
@@ -51,51 +94,8 @@ async function handler(req, res) {
       }
       return res.status(201).json({ message: 'Rating created successfully', rating });
 
-    } else if (method === 'DELETE') {
-      // Deleting an existing rating
-      try {
-        const ratings = await prisma.rating.findMany({
-          where: {
-            ownerId: userId,
-            postId: commentId ? null : Number(postId),
-            commentId: commentId ? Number(commentId) : null,
-          },
-        });
-        if (ratings.length == 0) {
-          return res.status(404).json({ error: 'Rating not found' });
-        }
-
-        const rating = await prisma.rating.delete({
-          where: {
-            [commentId ? 'ownerId_commentId' : 'ownerId_postId']: {
-              ownerId: userId,
-              ...(commentId ? { commentId: Number(commentId) } : { postId: Number(postId) }),
-            },
-          },
-        });
-        console.log(rating);
-        // Decrement the corresponding post or comment rating
-        const decrementData = { rating: { decrement: rating.value } };
-        if (commentId) {
-          await prisma.comment.update({
-            where: { id: Number(commentId) },
-            data: decrementData,
-          });
-        } else {
-          await prisma.blogPost.update({
-            where: { id: Number(postId) },
-            data: decrementData,
-          });
-        }
-        return res.status(200).json({ message: 'Rating deleted successfully' });
-      } catch (error) {
-        if (error.code === 'P2025') { // Record not found
-          return res.status(404).json({ error: 'Rating not found' });
-        }
-        throw error; // Re-throw other unexpected errors
-      }
     } else {
-      res.setHeader('Allow', ['POST', 'PATCH', 'DELETE']);
+      res.setHeader('Allow', ['POST', 'PATCH']);
       return res.status(405).json({ message: `Method ${method} Not Allowed` });
     }
   } catch (error) {

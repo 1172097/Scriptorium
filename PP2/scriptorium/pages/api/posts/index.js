@@ -57,11 +57,6 @@ export default async function handler(req, res) {
       },
       include: {
         tags: true,
-        templates: {
-          select: { 
-            title: true, // Only include the template's title
-          },
-        },
         author: {
           select: {
             profile_picture: true,
