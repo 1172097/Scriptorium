@@ -53,6 +53,18 @@ export const fetchWrapper = async (
           window.location.href = "/login";
         }
       }
+      if (response.status === 403) {
+        // Redirect to front page on unauthorized access
+        if (typeof window !== "undefined") {
+          window.location.href = "/";
+        }
+      }
+      if (response.status === 404) {
+        // Redirect to front page on not found
+        if (typeof window !== "undefined") {
+          window.location.href = "/";
+        }
+      }
       const errorData = await response.json();
       throw new Error(errorData.message || "Something went wrong");
     }
