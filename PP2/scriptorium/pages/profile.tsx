@@ -66,42 +66,40 @@ const UserProfile: React.FC = () => {
   }
 
   if (error) {
-    return <p className="text-center text-red-500">Error: {error}</p>;
+    return <p className="text-center text-error">Error: {error}</p>;
   }
 
   return (
-    <div className="max-w-4xl mx-auto mt-10 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
-      <h1 className="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-100">
-        User Profile
-      </h1>
+    <div className="max-w-3xl mx-auto bg-[var(--card-background)] rounded-2xl shadow-lg p-6 relative">
+      <h1 className="text-2xl font-bold mb-6 text-heading">User Profile</h1>
       {user ? (
         <div className="space-y-4">
           {!editing ? (
             <>
-              <p>
+              <p className="text-body">
                 <strong>Username:</strong> {user.username}
               </p>
-              <p>
+              <p className="text-body">
                 <strong>Email:</strong> {user.email}
               </p>
-              <p>
+              <p className="text-body">
                 <strong>First Name:</strong> {user.first_name || "N/A"}
               </p>
-              <p>
+              <p className="text-body">
                 <strong>Last Name:</strong> {user.last_name || "N/A"}
               </p>
-              <p>
+              <p className="text-body">
                 <strong>Phone:</strong> {user.phone || "N/A"}
               </p>
-              <p>
+              <p className="text-body">
                 <strong>Created At:</strong> {new Date(user.created_at).toLocaleString()}
               </p>
-              <p>
+              <p className="text-body">
                 <strong>Updated At:</strong> {new Date(user.updated_at).toLocaleString()}
               </p>
               <button
                 onClick={handleEditToggle}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors"
+                className="btn-primary"
               >
                 Edit Profile
               </button>
@@ -109,83 +107,85 @@ const UserProfile: React.FC = () => {
           ) : (
             <>
               <div>
-                <label className="block font-medium text-gray-700 dark:text-gray-300">Username</label>
+                <label className="label">Username</label>
                 <input
                   type="text"
                   name="username"
                   value={formData.username || ""}
                   onChange={handleInputChange}
-                  className="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white"
+                  className="input"
                 />
               </div>
               <div>
-                <label className="block font-medium text-gray-700 dark:text-gray-300">Email</label>
+                <label className="label">Email</label>
                 <input
                   type="email"
                   name="email"
                   value={formData.email || ""}
                   onChange={handleInputChange}
-                  className="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white"
+                  className="input"
                 />
               </div>
               <div>
-                <label className="block font-medium text-gray-700 dark:text-gray-300">First Name</label>
+                <label className="label">First Name</label>
                 <input
                   type="text"
                   name="first_name"
                   value={formData.first_name || ""}
                   onChange={handleInputChange}
-                  className="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white"
+                  className="input"
                 />
               </div>
               <div>
-                <label className="block font-medium text-gray-700 dark:text-gray-300">Last Name</label>
+                <label className="label">Last Name</label>
                 <input
                   type="text"
                   name="last_name"
                   value={formData.last_name || ""}
                   onChange={handleInputChange}
-                  className="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white"
+                  className="input"
                 />
               </div>
               <div>
-                <label className="block font-medium text-gray-700 dark:text-gray-300">Phone</label>
+                <label className="label">Phone</label>
                 <input
                   type="tel"
                   name="phone"
                   value={formData.phone || ""}
                   onChange={handleInputChange}
-                  className="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white"
+                  className="input"
                 />
               </div>
               <div>
-                <label className="block font-medium text-gray-700 dark:text-gray-300">Profile Picture</label>
+                <label className="label">Profile Picture</label>
                 <input
                   type="text"
                   name="profile_picture"
                   value={formData.profile_picture || ""}
                   onChange={handleInputChange}
-                  className="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white"
+                  className="input"
                   placeholder="URL of the profile picture"
                 />
               </div>
-              <button
-                onClick={handleSubmit}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500 transition-colors mr-2"
-              >
-                Confirm
-              </button>
-              <button
-                onClick={handleEditToggle}
-                className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-500 transition-colors"
-              >
-                Cancel
-              </button>
+              <div className="flex space-x-4">
+                <button
+                  onClick={handleSubmit}
+                  className="btn-success"
+                >
+                  Confirm
+                </button>
+                <button
+                  onClick={handleEditToggle}
+                  className="btn-secondary"
+                >
+                  Cancel
+                </button>
+              </div>
             </>
           )}
         </div>
       ) : (
-        <p>No user data available.</p>
+        <p className="text-body">No user data available.</p>
       )}
     </div>
   );

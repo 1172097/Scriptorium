@@ -63,6 +63,11 @@ const PostDetail: React.FC = () => {
   const [replyContent, setReplyContent] = useState<string>("");
 
   const [sortOrder, setSortOrder] = useState<"decs" | "asc">("decs");
+  const [isOwner, setIsOwner] = useState(false); 
+
+  const handleEdit = (postId: number) => {
+    router.push(`/p/${postId}/edit`);
+  };
 
   const fetchComment = async (commentId: number) => {
     try {
@@ -106,6 +111,12 @@ const PostDetail: React.FC = () => {
       try {
         const data = await api.get(`/posts/${id}?sortBy=${sortOrder}`);
         setPost(data.post);
+
+        const token = typeof window !== "undefined" ? sessionStorage.getItem("token") : null;
+        if (token) {
+          const userData = await api.get("/auth/profile");
+          setIsOwner(userData.user.user_id === data.post.authorId);
+        }
 
         // Initialize user ratings for the post
         setUserRatings((prev) => ({
@@ -306,7 +317,7 @@ const PostDetail: React.FC = () => {
                 className="text-sm bg-transparent border-none p-0 cursor-pointer hover:bg-transparent"
                 onClick={() => setReplyPopup(comment.id)}
               >
-                <span className="hover:text-green-600 text-[var(--text-primary)]" >
+                <span className="hover:text-[var(--text-secondary)] text-[var(--text-primary)]">
                   Reply
                 </span>
             </button>
@@ -316,7 +327,7 @@ const PostDetail: React.FC = () => {
                 className="text-sm bg-transparent border-none p-0 cursor-pointer hover:bg-transparent"
                 onClick={() => setReportPopup({ entityId: comment.id, isPost: false })}
               >
-                <span className="hover:text-red-600 text-[var(--text-primary)]">
+                <span className="hover:text-[var(--text-secondary)] text-[var(--text-primary)]">
                   Report
                 </span>
             </button>
@@ -351,7 +362,7 @@ const PostDetail: React.FC = () => {
       <div className="max-w-3xl mx-auto bg-[var(--card-background)] rounded-2xl shadow-lg p-6 relative">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-3xl font-bold">{post.title}</h1>
-          <button onClick={() => router.back()} className="text- transition-colors">
+          <button onClick={() => router.push(`/p`)} className="text- transition-colors">
             ← Back
           </button>
         </div>
@@ -429,7 +440,7 @@ const PostDetail: React.FC = () => {
                 className="text-sm bg-transparent border-none p-0 cursor-pointer hover:bg-transparent"
                 onClick={() => setReplyPopup(-1)}
               >
-                <span className="hover:text-green-600 text-[var(--text-primary)]" >
+                <span className="hover:text-[var(--text-secondary)] text-[var(--text-primary)]">
                   Comment
                 </span>
           </button>
@@ -439,11 +450,22 @@ const PostDetail: React.FC = () => {
               className="text-sm bg-transparent border-none p-0 cursor-pointer hover:bg-transparent"
               onClick={() => setReportPopup({ entityId: -1, isPost: true })}
             >
-              <span className="hover:text-red-600 text-[var(--text-primary)]">
+              <span className="hover:text-[var(--text-secondary)] text-[var(--text-primary)]">
                 Report
               </span>
           </button>
-          
+
+          {/* Edit Button */}
+          {isOwner && (
+            <button
+              className="text-sm bg-transparent border-none p-0 cursor-pointer hover:bg-transparent"
+              onClick={() => handleEdit(post.id)}
+            >
+              <span className="hover:text-[var(--text-secondary)] text-[var(--text-primary)]">
+                Edit
+              </span>
+            </button>
+          )}
         </div>
 
         <span className="text-sm text-[var(--text-primary)]"> Sort By:</span>

@@ -2,6 +2,8 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import BlogCard from "@/components/BlogCard";
 import { api } from "@/utils/api";
 import { isAuthenticated } from "@/utils/authFront"; // Import a utility to check authentication
+import LoginPopup from "@/components/loginPopup";
+import { useRouter } from "next/router";
 
 const BlogPostsPage: React.FC = () => {
   const [query, setQuery] = useState("");
@@ -22,9 +24,11 @@ const BlogPostsPage: React.FC = () => {
   const [sortOrder, setSortOrder] = useState<"decs" | "asc">("decs");
   const [fetchOwned, setFetchOwned] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login status
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
 
   const tagDropdownRef = useRef<HTMLDivElement>(null);
   const templateDropdownRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   useEffect(() => {
     // Check if user is logged in on mount
@@ -182,9 +186,33 @@ const BlogPostsPage: React.FC = () => {
     setFetchOwned((prev) => !prev);
   };
 
+  const handleCreatePost = () => {
+    if (!isLoggedIn) {
+      setShowLoginPopup(true);
+      return;
+    }
+
+    router.push("/p/create");
+  }
+
   return (
+
     <div className="min-h-screen bg-[var(--background-primary)] text-[var(--text-primary)] p-6">
       <div className="max-w-7xl mx-auto">
+        <div className="flex items-center justify-between mb-8">
+            <h1 className="text-3xl font-bold text-[#6A5294] dark:text-[#D4BBFF]">
+              Posts
+            </h1>
+            <span onClick={handleCreatePost}
+                  className="text-[#6A5294] dark:text-[#D4BBFF] hover:opacity-80 transition-opacity hover:text-[var(--button-hover)]">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" 
+                   stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </span>
+        </div>
+        
         {/* Search and Filters */}
         <div className="flex flex-col gap-4 mb-6">
           {/* Content Search */}
@@ -207,7 +235,7 @@ const BlogPostsPage: React.FC = () => {
               className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-[var(--card-background)] text-[var(--text-primary)]"
             />
             {isTagDropdownOpen && (
-              <div className="absolute top-full mt-2 w-full bg-white dark:bg-gray-900 rounded-lg shadow-lg max-h-40 overflow-y-auto z-10">
+              <div className="absolute top-full mt-2 w-full bg-white rounded-lg shadow-lg max-h-40 overflow-y-auto z-10">
                 {allTags.map((tag) => (
                   <div
                     key={tag.id}
@@ -248,7 +276,7 @@ const BlogPostsPage: React.FC = () => {
               className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-[var(--card-background)] text-[var(--text-primary)]"
             />
             {isTemplateDropdownOpen && (
-              <div className="absolute top-full mt-2 w-full bg-white dark:bg-gray-900 rounded-lg shadow-lg max-h-40 overflow-y-auto z-10">
+              <div className="absolute top-full mt-2 w-full bg-white rounded-lg shadow-lg max-h-40 overflow-y-auto z-10">
                 {allTemplates.map((template) => (
                   <div
                     key={template.id}
@@ -328,6 +356,14 @@ const BlogPostsPage: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Login Popup */}
+      <LoginPopup
+        isVisible={showLoginPopup}
+        onClose={() => setShowLoginPopup(false)}
+        onLogin={() => router.push("/login")}
+      />
+
     </div>
   );
 };

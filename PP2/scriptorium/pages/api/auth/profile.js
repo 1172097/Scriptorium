@@ -30,8 +30,6 @@ async function handler(req, res) {
           phone: true,
           created_at: true,
           updated_at: true,
-          code_templates: true,
-          blog_posts: true,
         },
       });
 

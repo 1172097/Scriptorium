@@ -54,12 +54,14 @@ async function handler(req, res) {
     if (method === 'PUT') {
         const { title, content, tagIds, templateIds} = req.body;
         const postId = Number(req.query.postId);
-
         const post = await prisma.blogPost.findUnique({
           where: { id: Number(postId) }, // Ensure id is a number
         });
         if (!post) {
           return res.status(404).json({ error: 'Post not found' });
+        }
+        if (userId !== post.authorId) {
+          return res.status(403).json({ error: 'Forbidden' });
         }
 
       // Validate input
@@ -92,6 +94,9 @@ async function handler(req, res) {
       });
       if (!post) {
         return res.status(404).json({ error: 'Post not found' });
+      }
+      if (userId !== post.authorId) {
+        return res.status(403).json({ error: 'Forbidden' });
       }
       await prisma.blogPost.delete({
         where: { id: Number(postId) },

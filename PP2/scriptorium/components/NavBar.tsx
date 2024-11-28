@@ -3,16 +3,21 @@ import Link from "next/link";
 import Image from "next/image";
 import { isAuthenticated, removeToken } from "@/utils/authFront";
 import { useRouter } from "next/router";
+import { api } from "@/utils/api";
 
 const Navbar: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [profile, setProfile] = useState<{ username: string; profile_picture: string } | null>(
+    null
+  );
   const router = useRouter();
 
   const toggleDarkMode = () => {
     const newMode = !darkMode;
     setDarkMode(newMode);
+    closeMenu();
 
     if (newMode) {
       document.documentElement.setAttribute("data-theme", "dark");
@@ -39,6 +44,21 @@ const Navbar: React.FC = () => {
     // Update login state on component mount
     setIsLoggedIn(isAuthenticated());
 
+    // Fetch user profile if logged in
+    if (isAuthenticated()) {
+      api.get(`/auth/profile`)
+        .then((response) => {
+          const user = response.user;
+          setProfile({
+            username: user.username,
+            profile_picture: user.profile_picture || "/public/default_profile_pic.png",
+          });
+        })
+        .catch((err) => {
+          console.error("Failed to fetch profile", err);
+        });
+    }
+
     // Listen for login success event
     const handleLoginSuccess = () => {
       setIsLoggedIn(isAuthenticated());
@@ -54,8 +74,10 @@ const Navbar: React.FC = () => {
   const handleSignOut = () => {
     removeToken(); // Clear the token
     setIsLoggedIn(false); // Update state
+    closeMenu(); // Close the menu
     router.push("/login"); // Redirect to login page
   };
+  const closeMenu = () => setMenuOpen(false);
 
   return (
     <>
@@ -106,12 +128,21 @@ const Navbar: React.FC = () => {
               </button>
 
               {/* Authentication Section */}
-              {isLoggedIn ? (
+              {isLoggedIn && profile ? (
                 <div className="space-x-4 flex items-center">
                   <Link href="/profile">
-                    <span className="cursor-pointer text-sm text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300">
-                      Profile
-                    </span>
+                    <div className="flex items-center cursor-pointer">
+                      <Image
+                        src={profile.profile_picture}
+                        alt={`${profile.username}'s profile picture`}
+                        width={30}
+                        height={30}
+                        className="rounded-full"
+                      />
+                      <span className="ml-2 text-sm text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300">
+                        {profile.username}
+                      </span>
+                    </div>
                   </Link>
                   <button
                     onClick={handleSignOut}
@@ -150,26 +181,26 @@ const Navbar: React.FC = () => {
         {/* Mobile Menu */}
         {menuOpen && (
           <div className="fixed top-14 left-0 w-full bg-white dark:bg-gray-900 shadow-md backdrop-blur-sm p-4 shadow-lg md:hidden border-b border-gray-200 dark:border-gray-800">
-            <Link href="/t">
+            <Link href="/t" onClick={closeMenu}>
               <div className="block mb-2 text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300">
                 Templates
               </div>
             </Link>
-            <Link href="/p">
+            <Link href="/p" onClick={closeMenu}>
               <div className="block mb-2 text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300">
                 Posts
               </div>
             </Link>
-            <Link href="/about">
+            <Link href="/about" onClick={closeMenu}>
               <div className="block mb-2 text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300">
                 About
               </div>
             </Link>
-            {isLoggedIn ? (
+            {isLoggedIn && profile ? (
               <>
-                <Link href="/profile">
+                <Link href="/profile" onClick={closeMenu}>
                   <div className="block mt-4 text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300">
-                    Profile
+                    {profile.username}
                   </div>
                 </Link>
                 <button
@@ -181,12 +212,12 @@ const Navbar: React.FC = () => {
               </>
             ) : (
               <>
-                <Link href="/login">
+                <Link href="/login" onClick={closeMenu}>
                   <div className="block mt-4 text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300">
                     Login
                   </div>
                 </Link>
-                <Link href="/signup">
+                <Link href="/signup" onClick={closeMenu}>
                   <div className="block mt-2 text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300">
                     Signup
                   </div>
