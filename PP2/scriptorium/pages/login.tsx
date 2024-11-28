@@ -43,20 +43,16 @@ export default function Login() {
       }
 
       const data = await response.json();
-      // Store token in sessionStorage
       sessionStorage.setItem('token', data.token);
-
-      // Emit login event
+      
       const event = new Event("userLoggedIn");
       window.dispatchEvent(event);
-
       
-      // Store refresh token in cookies with HttpOnly flag
       document.cookie = `refreshToken=${data.refreshToken}; path=/; max-age=172800; SameSite=Strict`;
       
       console.log('Login successful:', data);
       alert('Login successful!');
-      router.push('/'); // Redirect to dashboard or any other page
+      router.push('/');
     } catch (error) {
       console.error('Error logging in:', error);
       alert('An error occurred. Please try again.');
@@ -64,9 +60,9 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#FEF7FF] dark:bg-[#3F384C] p-4">
-      <div className="w-full max-w-[420px] bg-white dark:bg-[#2D2640] rounded-2xl p-10 shadow-lg">
-        <h1 className="text-[#6A5294] dark:text-[#D4BBFF] text-3xl font-bold text-center mb-8">
+    <div className="min-h-screen flex items-center justify-center bg-[var(--background)] p-4">
+      <div className="w-full max-w-[420px] bg-[var(--card-background)] rounded-2xl p-10 shadow-lg">
+        <h1 className="text-[var(--text-primary)] text-3xl font-bold text-center mb-8">
           Welcome Back
         </h1>
         
@@ -74,7 +70,7 @@ export default function Login() {
           <div>
             <label 
               htmlFor="username" 
-              className="block text-[#6A5294E6] dark:text-[#D4BBFFE6] text-sm font-medium mb-2"
+              className="block text-[var(--text-primary)] text-sm font-medium mb-2"
             >
               Username
             </label>
@@ -84,11 +80,9 @@ export default function Login() {
               name="username"
               value={loginData.username}
               onChange={handleChange}
-              className="w-full p-3 bg-[#FEF7FF] dark:bg-[#3F384C] border border-[#6A529433] 
-                       dark:border-[#D4BBFF33] rounded-lg focus:outline-none 
-                       focus:bg-[#EBDCFF] dark:focus:bg-[#513A7A] 
-                       text-[#6A5294] dark:text-[#D4BBFF]
-                       placeholder-[#6A5294B3] dark:placeholder-[#D4BBFFB3]"
+              className="w-full p-3 bg-[var(--input-background)] border border-[var(--border)]
+                       rounded-lg focus:outline-none focus:border-[var(--highlight)]
+                       text-[var(--text-primary)] placeholder-[var(--text-secondary)]"
               placeholder="Enter your username"
             />
           </div>
@@ -96,7 +90,7 @@ export default function Login() {
           <div>
             <label 
               htmlFor="password" 
-              className="block text-[#6A5294E6] dark:text-[#D4BBFFE6] text-sm font-medium mb-2"
+              className="block text-[var(--text-primary)] text-sm font-medium mb-2"
             >
               Password
             </label>
@@ -106,28 +100,25 @@ export default function Login() {
               name="password"
               value={loginData.password}
               onChange={handleChange}
-              className="w-full p-3 bg-[#FEF7FF] dark:bg-[#3F384C] border border-[#6A529433] 
-                       dark:border-[#D4BBFF33] rounded-lg focus:outline-none 
-                       focus:bg-[#EBDCFF] dark:focus:bg-[#513A7A] 
-                       text-[#6A5294] dark:text-[#D4BBFF]
-                       placeholder-[#6A5294B3] dark:placeholder-[#D4BBFFB3]"
+              className="w-full p-3 bg-[var(--input-background)] border border-[var(--border)]
+                       rounded-lg focus:outline-none focus:border-[var(--highlight)]
+                       text-[var(--text-primary)] placeholder-[var(--text-secondary)]"
               placeholder="Enter your password"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-[#6A5294] dark:bg-[#D4BBFF] text-white dark:text-[#3F384C] 
-                     py-3 rounded-lg font-semibold hover:bg-[#563E80] 
-                     dark:hover:bg-[#EBDCFF] transition-colors"
+            className="w-full bg-[var(--highlight)] text-[var(--highlight-text)]
+                     py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity"
           >
             Log In
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-[#6A5294B3] dark:text-[#D4BBFFB3]">
+        <p className="mt-6 text-center text-sm text-[var(--text-secondary)]">
           Don't have an account?{' '}
-          <a href="./signup" className="text-[#6A5294] dark:text-[#D4BBFF] hover:underline">
+          <a href="./signup" className="text-[var(--text-primary)] hover:underline">
             Sign up
           </a>
         </p>

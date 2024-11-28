@@ -33,7 +33,7 @@ export default function SignUp() {
     }
 
     try {
-      const response = await fetch('http://localhost:3000/api/auth/register', {
+      const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -62,9 +62,9 @@ export default function SignUp() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#FEF7FF] dark:bg-[#3F384C] p-4">
-      <div className="w-full max-w-[420px] bg-white dark:bg-[#2D2640] rounded-2xl p-10 shadow-lg">
-        <h1 className="text-[#6A5294] dark:text-[#D4BBFF] text-3xl font-bold text-center mb-8">
+    <div className="min-h-screen flex items-center justify-center bg-[var(--background)] p-4">
+      <div className="w-full max-w-[420px] bg-[var(--card-background)] rounded-2xl p-10 shadow-lg">
+        <h1 className="text-[var(--text-primary)] text-3xl font-bold text-center mb-8">
           Create Account
         </h1>
         
@@ -72,7 +72,7 @@ export default function SignUp() {
           <div>
             <label 
               htmlFor="username" 
-              className="block text-[#6A5294E6] dark:text-[#D4BBFFE6] text-sm font-medium mb-2"
+              className="block text-[var(--text-primary)] text-sm font-medium mb-2"
             >
               Username
             </label>
@@ -82,11 +82,9 @@ export default function SignUp() {
               name="username"
               value={formData.username}
               onChange={handleChange}
-              className="w-full p-3 bg-[#FEF7FF] dark:bg-[#3F384C] border border-[#6A529433] 
-                       dark:border-[#D4BBFF33] rounded-lg focus:outline-none 
-                       focus:bg-[#EBDCFF] dark:focus:bg-[#513A7A] 
-                       text-[#6A5294] dark:text-[#D4BBFF]
-                       placeholder-[#6A5294B3] dark:placeholder-[#D4BBFFB3]"
+              className="w-full p-3 bg-[var(--input-background)] border border-[var(--border)] 
+                       rounded-lg focus:outline-none focus:border-[var(--highlight)]
+                       text-[var(--text-primary)] placeholder-[var(--text-secondary)]"
               placeholder="Enter your username"
             />
           </div>
@@ -94,7 +92,7 @@ export default function SignUp() {
           <div>
             <label 
               htmlFor="email" 
-              className="block text-[#6A5294E6] dark:text-[#D4BBFFE6] text-sm font-medium mb-2"
+              className="block text-[var(--text-primary)] text-sm font-medium mb-2"
             >
               Email Address
             </label>
@@ -104,11 +102,9 @@ export default function SignUp() {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full p-3 bg-[#FEF7FF] dark:bg-[#3F384C] border border-[#6A529433] 
-                       dark:border-[#D4BBFF33] rounded-lg focus:outline-none 
-                       focus:bg-[#EBDCFF] dark:focus:bg-[#513A7A] 
-                       text-[#6A5294] dark:text-[#D4BBFF]
-                       placeholder-[#6A5294B3] dark:placeholder-[#D4BBFFB3]"
+              className="w-full p-3 bg-[var(--input-background)] border border-[var(--border)]
+                       rounded-lg focus:outline-none focus:border-[var(--highlight)]
+                       text-[var(--text-primary)] placeholder-[var(--text-secondary)]"
               placeholder="Enter your email"
             />
           </div>
@@ -116,7 +112,7 @@ export default function SignUp() {
           <div>
             <label 
               htmlFor="password" 
-              className="block text-[#6A5294E6] dark:text-[#D4BBFFE6] text-sm font-medium mb-2"
+              className="block text-[var(--text-primary)] text-sm font-medium mb-2"
             >
               Password
             </label>
@@ -126,11 +122,9 @@ export default function SignUp() {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className="w-full p-3 bg-[#FEF7FF] dark:bg-[#3F384C] border border-[#6A529433] 
-                       dark:border-[#D4BBFF33] rounded-lg focus:outline-none 
-                       focus:bg-[#EBDCFF] dark:focus:bg-[#513A7A] 
-                       text-[#6A5294] dark:text-[#D4BBFF]
-                       placeholder-[#6A5294B3] dark:placeholder-[#D4BBFFB3]"
+              className="w-full p-3 bg-[var(--input-background)] border border-[var(--border)]
+                       rounded-lg focus:outline-none focus:border-[var(--highlight)]
+                       text-[var(--text-primary)] placeholder-[var(--text-secondary)]"
               placeholder="Choose a password"
             />
           </div>
@@ -138,7 +132,7 @@ export default function SignUp() {
           <div>
             <label 
               htmlFor="confirmPassword" 
-              className="block text-[#6A5294E6] dark:text-[#D4BBFFE6] text-sm font-medium mb-2"
+              className="block text-[var(--text-primary)] text-sm font-medium mb-2"
             >
               Confirm Password
             </label>
@@ -148,32 +142,29 @@ export default function SignUp() {
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
-              className="w-full p-3 bg-[#FEF7FF] dark:bg-[#3F384C] border border-[#6A529433] 
-                       dark:border-[#D4BBFF33] rounded-lg focus:outline-none 
-                       focus:bg-[#EBDCFF] dark:focus:bg-[#513A7A] 
-                       text-[#6A5294] dark:text-[#D4BBFF]
-                       placeholder-[#6A5294B3] dark:placeholder-[#D4BBFFB3]"
+              className="w-full p-3 bg-[var(--input-background)] border border-[var(--border)]
+                       rounded-lg focus:outline-none focus:border-[var(--highlight)]
+                       text-[var(--text-primary)] placeholder-[var(--text-secondary)]"
               placeholder="Confirm your password"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-[#6A5294] dark:bg-[#D4BBFF] text-white dark:text-[#3F384C] 
-                     py-3 rounded-lg font-semibold hover:bg-[#563E80] 
-                     dark:hover:bg-[#EBDCFF] transition-colors"
+            className="w-full bg-[var(--highlight)] text-[var(--highlight-text)]
+                     py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity"
           >
             Sign Up
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-[#6A5294B3] dark:text-[#D4BBFFB3]">
+        <p className="mt-6 text-center text-sm text-[var(--text-secondary)]">
           By signing up, you agree to our{' '}
-          <a href="#" className="text-[#6A5294] dark:text-[#D4BBFF] hover:underline">
+          <a href="#" className="text-[var(--text-primary)] hover:underline">
             Terms of Service
           </a>{' '}
           and{' '}
-          <a href="#" className="text-[#6A5294] dark:text-[#D4BBFF] hover:underline">
+          <a href="#" className="text-[var(--text-primary)] hover:underline">
             Privacy Policy
           </a>
         </p>
