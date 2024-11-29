@@ -1,3 +1,5 @@
+# made by chatGPT
+
 FROM golang:latest
 WORKDIR /app
 RUN useradd -m runner && \

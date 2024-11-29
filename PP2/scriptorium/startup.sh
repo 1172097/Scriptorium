@@ -17,6 +17,23 @@ fi
 echo "Installing packages..."
 npm install
 
+# Install required packages
+echo "Installing packages..."
+npm install
+
+# Build Docker images
+echo "Building Docker images..."
+cd "$(dirname "$0")/docker"
+
+languages=("python" "javascript" "java" "cpp" "golang" "ruby" "rust" "php" "csharp" "swift")
+
+for lang in "${languages[@]}"; do
+    echo "Building $lang image..."
+    docker build --memory 2g --no-cache --pull -t "code-executor-$lang:latest" "$lang/"
+done
+
+cd ..
+
 # Drop the existing database and create a new one
 echo "Starting a new empty database..."
 npx prisma migrate reset --force

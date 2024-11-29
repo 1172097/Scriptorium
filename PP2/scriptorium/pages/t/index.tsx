@@ -1,3 +1,6 @@
+
+// # made by chatGPT
+
 import React, { useState, useEffect, useRef } from 'react';
 import TemplateCard from '@/components/TemplateCard';
 import NavBar from '@/components/NavBar';
