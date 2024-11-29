@@ -47,7 +47,7 @@ const Navbar: React.FC = () => {
           const user = response.user;
           setProfile({
             username: user.username,
-            profile_picture: user.profile_picture || "/public/default_profile_pic.png",
+            profile_picture: user.profile_picture || "/incognito.png",
           });
           setIsAdmin(user.role === "ADMIN");
         })
@@ -117,7 +117,7 @@ const Navbar: React.FC = () => {
             {/* Reports Link for Admins */}
             {isAdmin && (
               <Link href="/admin/reports">
-                <span className="text-sm text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300">
+                <span className="text-sm text-[var(--text-primary)] hover:opacity-80">
                   Reports
                 </span>
               </Link>
@@ -125,10 +125,10 @@ const Navbar: React.FC = () => {
 
               <button
                 onClick={toggleDarkMode}
-                className="text-sm text-[var(--text-primary)] hover:opacity-80"
+                className="text-sm text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300"
               >
                 {darkMode ? "Light Mode" : "Dark Mode"}
-              </button>
+              </button> 
 
               {/* Authentication Section */}
               {isLoggedIn && profile ? (
@@ -175,7 +175,7 @@ const Navbar: React.FC = () => {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="md:hidden text-[var(--text-primary)] hover:opacity-80"
+              className="md:hidden text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300"
               aria-label="Toggle Menu"
             >
               ☰
@@ -190,7 +190,7 @@ const Navbar: React.FC = () => {
             {/* Reports Link for Admins */}
             {isAdmin && (
                 <Link href="/admin/reports" onClick={closeMenu}>
-                  <div className="block mb-2 text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300">
+                  <div className="block mb-2 text-[var(--text-primary)] hover:opacity-80">
                     Reports
                   </div>
                 </Link>
@@ -219,7 +219,7 @@ const Navbar: React.FC = () => {
                 </Link>
                 <button
                   onClick={handleSignOut}
-                  className="block mt-2 text-sm text-[var(--text-primary)] hover:opacity-80"
+                  className="block mt-2 text-sm text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300"
                 >
                   Sign Out
                 </button>
@@ -240,7 +240,7 @@ const Navbar: React.FC = () => {
             )}
             <button
               onClick={toggleDarkMode}
-              className="block mt-4 text-sm text-[var(--text-primary)] hover:opacity-80"
+              className="block mt-4 text-sm text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300"
             >
               {darkMode ? "Light Mode" : "Dark Mode"}
             </button>
