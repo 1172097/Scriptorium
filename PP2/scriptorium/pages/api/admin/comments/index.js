@@ -20,7 +20,6 @@ async function handler(req, res) {
       },
       include: {
         reports: true,
-        ratings: true,
         author: { select: { username: true }},
       },
       skip: (page - 1) * pageSize, // Calculate offset for pagination

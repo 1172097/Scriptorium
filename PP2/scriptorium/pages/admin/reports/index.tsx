@@ -11,6 +11,7 @@ type Post = {
     username: string;
   };
   numReports: number;
+  reports: Report[];
 };
 
 type Comment = {
@@ -20,7 +21,17 @@ type Comment = {
     username: string;
   };
   numReports: number;
+  reports: Report[];
 };
+
+type Report = {
+    report_id: number;
+    reason: string;
+    created_at: string;
+    ownerId: number;
+    postId: number | null;
+    commentId: number | null;
+  };
 
 const AdminReports: React.FC = () => {
     const [posts, setPosts] = useState<Post[]>([]);
@@ -31,6 +42,7 @@ const AdminReports: React.FC = () => {
     const [commentPage, setCommentPage] = useState(1);
     const [hasMorePosts, setHasMorePosts] = useState(true);
     const [hasMoreComments, setHasMoreComments] = useState(true);
+    const [selectedReports, setSelectedReports] = useState<Report[]>([]);
   
     const fetchReports = async (page: number, type: "posts" | "comments") => {
       setLoading(true);
@@ -91,6 +103,9 @@ const AdminReports: React.FC = () => {
         alert("Failed to hide comment. Please try again.");
       }
     };
+    const showReportDetails = (reports: Report[]) => {
+        setSelectedReports(reports);
+    };
   
     useEffect(() => {
       fetchReports(1, "posts");
@@ -123,6 +138,8 @@ const AdminReports: React.FC = () => {
                   description={post.content.substring(0, 100) + "..."}
                   author={post.author.username}
                   numReports={post.numReports}
+                  reports={post.reports}
+                  onReport={showReportDetails}
                   onHide={handleHidePost}
                 />
               ))
@@ -142,6 +159,8 @@ const AdminReports: React.FC = () => {
                   content={comment.content}
                   author={comment.author.username}
                   numReports={comment.numReports}
+                  reports={comment.reports}
+                  onReport={showReportDetails}
                   onHide={handleHideComment}
                 />
               ))
@@ -150,6 +169,39 @@ const AdminReports: React.FC = () => {
             )}
           </div>
         </div>
+
+        {/* Report Details Modal */}
+        {selectedReports.length > 0 && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+            {/* Background Overlay */}
+            <div
+            className="absolute inset-0 bg-[var(--shadow-lg)] bg-opacity-50"
+            onClick={() => setSelectedReports([])}
+            ></div>
+
+            {/* Modal Content */}
+            <div className="relative z-10 bg-[var(--card-background)] text-[var(--text-primary)] p-6 rounded-lg shadow-lg w-96">
+            <h2 className="text-xl font-bold mb-4">Report Details</h2>
+            <ul className="divide-y divide-[var(--border-color)]">
+                {selectedReports.map((report) => (
+                <li
+                    key={report.report_id}
+                    className="py-2 text-sm"
+                >
+                    <strong>Reason:</strong> {report.reason} <br />
+                    <strong>Reported At:</strong> {new Date(report.created_at).toLocaleString()}
+                </li>
+                ))}
+            </ul>
+            <button
+                className="text-sm cursor-pointer rounded-xl p-2 pl-3 pr-3"
+                onClick={() => setSelectedReports([])}
+                >
+                    Close
+            </button>
+            </div>
+        </div>
+        )}
       </div>
     );
   };
