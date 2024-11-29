@@ -6,7 +6,7 @@ const Home: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-start min-h-screen bg-[var(--background-primary)] text-[var(--text-primary)] pt-20 px-4 md:px-0">
       <h1 className="text-3xl md:text-4xl font-bold mb-4 text-center">
-        Welcome to Scriptorium
+        Welcome to Scriptorium edited
       </h1>
       <p className="text-base md:text-lg mb-6 text-center">
         Your platform for creating, executing, and sharing code templates and blog posts.
