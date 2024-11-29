@@ -51,7 +51,6 @@ export default function Login() {
       document.cookie = `refreshToken=${data.refreshToken}; path=/; max-age=172800; SameSite=Strict`;
       
       console.log('Login successful:', data);
-      alert('Login successful!');
       router.push('/');
     } catch (error) {
       console.error('Error logging in:', error);
