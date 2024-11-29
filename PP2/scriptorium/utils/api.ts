@@ -7,7 +7,7 @@ const getBaseURL = (): string => {
     if (window.location.hostname === "localhost") {
       return "http://localhost:3000/api"; // Development backend URL
     }
-    return `${window.location.origin}/api`; // Production backend URL
+    return "https://scriptorium11.vercel.app/api"; // Production backend URL
   }
 
   // Fallback for environments where `window` is not defined
