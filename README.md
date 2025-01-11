@@ -1,5 +1,3 @@
-<img width="1512" alt="Screenshot 2025-01-11 at 1 00 04 PM" src="https://github.com/user-attachments/assets/a39430da-2a5e-40ec-af93-e39c3016ebda" /># Scriptorium
-
 **Scriptorium** is a modern online platform designed for coding enthusiasts to write, execute, and share code in multiple programming languages. Inspired by the ancient scriptorium—a space where manuscripts were created and preserved—this digital scriptorium provides a secure, innovative environment for coders to experiment, refine, and save their work as reusable templates.
 
 ---
