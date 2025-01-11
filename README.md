@@ -24,16 +24,13 @@ Scriptorium offers a rich set of features to improve the coding experience:
 - Displays error messages for easier debugging.  
 
 **Image:**  
-![Code Writing and Execution](./images/code-writing-execution.png)
+![Code Writing and Execution](./images/CodeExecLight.png)
 
 ---
 
 ### **2. Secure Code Execution**  
 - Code runs in an isolated, secure environment to prevent interference with other users or the system.  
 - Enforces memory and time limits to handle long-running or resource-intensive code.  
-
-**Image:**  
-![Secure Code Execution](./images/secure-code-execution.png)
 
 ---
 
@@ -55,7 +52,8 @@ Scriptorium offers a rich set of features to improve the coding experience:
 - Browse and search blog posts by title, tags, or linked templates.  
 
 **Image:**  
-![Blog Posts and Discussions](./images/blog-posts-discussions.png)
+![Blog Posts and Discussions](./images/BlogPostsHomeLight.png)
+![Blog Posts and Discussions](./images/BlogPostViewLight.png)
 
 ---
 
@@ -64,17 +62,32 @@ Scriptorium offers a rich set of features to improve the coding experience:
 - Admins can manage reported content and hide inappropriate posts.  
 
 **Image:**  
-![Reporting Inappropriate Content](./images/reporting-content.png)
+![Reporting Inappropriate Content](./images/ReportingBlogPost.png)
 
 ---
 
 ### **6. Responsive User Interface**  
 - Clean and intuitive design for a seamless user experience.  
 - Responsive across all devices: desktop, tablet, and mobile.  
-- Light and dark themes for personalized comfort.  
+- Light and dark themes for personalized comfort.
 
 **Image:**  
-![Responsive User Interface](./images/responsive-ui.png)
+![Responsive User Interface](./images/CodeTemplatesHomeLight.png)
+![Responsive User Interface](./images/CodeTemplatesHomeDark.png)
+
+
+### Mobile View
+**Image:**  
+![Responsive User Interface](./images/CodeExecMobile.png)
+
+**Image:**  
+![Responsive User Interface](./images/CodeTemplateMobile.png)
+
+
+
+### Index Page Light/Dark
+![Responsive User Interface](./images/IndexLight.png)
+![Responsive User Interface](./images/IndexDark.png)
 
 ---
 
