@@ -90,6 +90,54 @@ const TemplateDetail = () => {
     setEditableCode(value || '');
   };
 
+
+  const handleAnalyzeCode = async () => {
+    try {
+      // Get editor instance and selected text
+      const selection = window.getSelection()?.toString();
+      
+      if (!selection) {
+        alert('Please highlight some code to analyze');
+        return;
+      }
+  
+      const response = await fetch('http://localhost:5000/predict', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          input: selection
+        })
+      });
+      console.log(response)
+      if (!response.ok) {
+        const errorText = await response.text();
+        alert(`Analysis failed: ${errorText}`);
+        return;
+      }
+  
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.indexOf('application/json') !== -1) {
+        const data = await response.json();
+        // Display the analysis results
+        const { confidence, prediction } = data;
+        alert(`Analysis results:\nPrediction: ${prediction}\nConfidence: ${(confidence * 100).toFixed(2)}%`);
+        console.log('Analysis results:', data);
+      } else {
+        const errorText = await response.text();
+        // console.error('Error analyzing code:', errorText);
+        alert('Failed to analyze code');
+      }
+  
+    } catch (error) {
+      // console.error('Error analyzing code:', error);
+      alert('Failed to analyze code');
+    }
+  };
+
+
+
   const handleExecuteCode = async () => {
     console.log(userId);
     console.log(template?.id);
@@ -194,16 +242,27 @@ const TemplateDetail = () => {
             flex flex-col lg:min-h-0">
             <div className="flex flex-col sm:flex-row gap-2 mb-4 justify-between">
               <div className="px-3 py-0.5 text-sm rounded-md border border-[var(--border)] 
-                bg-[var(--input-background)] text-[var(--text-primary)]">
-                {template.language}
+              bg-[var(--input-background)] text-[var(--text-primary)]">
+              {template.language}
               </div>
+              <div className="flex gap-2">
+              {template.language === 'Python' && (
+                <button
+                onClick={handleAnalyzeCode} 
+                className="px-3 py-0.5 text-sm rounded-md 
+                  bg-[var(--highlight)] text-[var(--highlight-text)] font-medium"
+                >
+                Analyze
+                </button>
+              )}
               <button
                 onClick={handleExecuteCode}
                 className="px-3 py-0.5 text-sm rounded-md bg-[var(--highlight)] 
-                  text-[var(--highlight-text)] font-medium"
+                text-[var(--highlight-text)] font-medium"
               >
                 Run
               </button>
+              </div>
             </div>
 
             {/* Editor */}

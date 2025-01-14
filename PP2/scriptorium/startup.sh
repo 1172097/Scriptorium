@@ -25,12 +25,12 @@ npm install
 echo "Building Docker images..."
 cd "$(dirname "$0")/docker"
 
-languages=("python" "javascript" "java" "cpp" "golang" "ruby" "rust" "php" "csharp" "swift")
+# languages=("python" "javascript" "java" "cpp" "golang" "ruby" "rust" "php" "csharp" "swift")
 
-for lang in "${languages[@]}"; do
-    echo "Building $lang image..."
-    docker build --memory 2g --no-cache --pull -t "code-executor-$lang:latest" "$lang/"
-done
+# for lang in "${languages[@]}"; do
+#     echo "Building $lang image..."
+#     docker build --memory 2g --no-cache --pull -t "code-executor-$lang:latest" "$lang/"
+# done
 
 cd ..
 
