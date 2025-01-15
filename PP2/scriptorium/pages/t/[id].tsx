@@ -246,7 +246,7 @@ const TemplateDetail = () => {
               {template.language}
               </div>
               <div className="flex gap-2">
-              {template.language === 'Python' && (
+                {template.language.toLowerCase() === 'python' && (
                 <button
                 onClick={handleAnalyzeCode} 
                 className="px-3 py-0.5 text-sm rounded-md 
@@ -254,7 +254,7 @@ const TemplateDetail = () => {
                 >
                 Analyze
                 </button>
-              )}
+                )}
               <button
                 onClick={handleExecuteCode}
                 className="px-3 py-0.5 text-sm rounded-md bg-[var(--highlight)] 
